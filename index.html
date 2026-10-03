@@ -80,10 +80,6 @@
 
                 <!-- Action Button -->
                 <div class="hidden md:flex items-center space-x-3">
-                    <button onclick="openMediaModal()" class="inline-flex items-center space-x-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 text-sm font-semibold px-4 py-2 rounded-xl shadow-sm transition">
-                        <i class="fa-solid fa-cloud-arrow-up text-brand-600"></i>
-                        <span>Uploads</span>
-                    </button>
                     <button onclick="downloadResume()" class="inline-flex items-center space-x-2 bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold px-4 py-2 rounded-xl shadow-lg shadow-brand-600/20 transition transform active:scale-95">
                         <i class="fa-solid fa-file-arrow-down"></i>
                         <span>Resume</span>
@@ -106,10 +102,6 @@
             <a href="#certificates" class="block py-2 text-slate-600 hover:text-brand-600 font-medium">Certificates</a>
             <a href="#experience" class="block py-2 text-slate-600 hover:text-brand-600 font-medium">Experience</a>
             <a href="#contact" class="block py-2 text-slate-600 hover:text-brand-600 font-medium">Contact</a>
-            <button onclick="openMediaModal()" class="w-full mt-2 inline-flex items-center justify-center space-x-2 bg-white border border-slate-300 text-slate-700 text-sm font-semibold px-4 py-2.5 rounded-xl">
-                <i class="fa-solid fa-cloud-arrow-up text-brand-600"></i>
-                <span>Upload Photos / Certs / Resume</span>
-            </button>
             <button onclick="downloadResume()" class="w-full mt-2 inline-flex items-center justify-center space-x-2 bg-brand-600 text-white text-sm font-semibold px-4 py-2.5 rounded-xl">
                 <i class="fa-solid fa-file-arrow-down"></i>
                 <span>Download Resume</span>
@@ -725,125 +717,6 @@
         </div>
     </div>
 
-    <!-- Project Details & Screenshots Modal -->
-    <div id="project-modal" class="fixed inset-0 z-50 hidden bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-        <div class="bg-white rounded-3xl max-w-3xl w-full p-6 sm:p-8 relative shadow-2xl my-8">
-            <button onclick="closeProjectModal()" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-700 transition">
-                <i class="fa-solid fa-xmark text-lg"></i>
-            </button>
-
-            <div class="mb-6">
-                <span class="text-xs font-bold bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full" id="proj-modal-role">Role</span>
-                <h3 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-2" id="proj-modal-title">Project Title</h3>
-            </div>
-
-            <div class="space-y-6 text-sm text-slate-600 max-h-[70vh] overflow-y-auto pr-2">
-                <div>
-                    <h5 class="font-bold text-slate-900 mb-1"><i class="fa-solid fa-bullseye text-brand-600 mr-2"></i> Purpose of the System</h5>
-                    <p id="proj-modal-purpose" class="leading-relaxed"></p>
-                </div>
-
-                <div>
-                    <h5 class="font-bold text-slate-900 mb-1"><i class="fa-solid fa-microchip text-brand-600 mr-2"></i> Technologies Used</h5>
-                    <p id="proj-modal-tech" class="font-mono text-xs bg-slate-100 p-3 rounded-xl border border-slate-200 text-slate-800"></p>
-                </div>
-
-                <div>
-                    <h5 class="font-bold text-slate-900 mb-1"><i class="fa-solid fa-star text-brand-600 mr-2"></i> Key Features</h5>
-                    <p id="proj-modal-features" class="leading-relaxed"></p>
-                </div>
-
-                <div>
-                    <h5 class="font-bold text-slate-900 mb-1"><i class="fa-solid fa-user-gear text-brand-600 mr-2"></i> Contributions Made</h5>
-                    <p id="proj-modal-contributions" class="leading-relaxed"></p>
-                </div>
-
-                <div>
-                    <h5 class="font-bold text-slate-900 mb-3"><i class="fa-solid fa-images text-brand-600 mr-2"></i> Project Screenshots</h5>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div class="rounded-xl overflow-hidden border border-slate-200 bg-slate-100 h-48">
-                            <img id="proj-modal-img1" src="" alt="Screenshot 1" class="w-full h-full object-cover">
-                        </div>
-                        <div class="rounded-xl overflow-hidden border border-slate-200 bg-slate-100 h-48">
-                            <img id="proj-modal-img2" src="" alt="Screenshot 2" class="w-full h-full object-cover">
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="mt-8 pt-4 border-t border-slate-200 flex justify-end">
-                <button onclick="closeProjectModal()" class="bg-slate-900 hover:bg-slate-800 text-white font-semibold px-6 py-2.5 rounded-xl text-sm transition">Close Details</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Media Upload Manager Modal -->
-    <div id="media-modal" class="fixed inset-0 z-50 hidden bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-        <div class="bg-white rounded-3xl max-w-3xl w-full p-6 sm:p-8 relative shadow-2xl my-8 max-h-[92vh] overflow-y-auto">
-            <button onclick="closeMediaModal()" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-700 transition">
-                <i class="fa-solid fa-xmark text-lg"></i>
-            </button>
-
-            <div class="mb-6 pr-10">
-                <span class="text-xs font-bold bg-brand-50 text-brand-700 px-3 py-1 rounded-full">Media Manager</span>
-                <h3 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-2">Upload Photos, Certificates & Resume</h3>
-                <p class="text-sm text-slate-600 mt-2">Pick files from your device. They replace the placeholders across the portfolio instantly.</p>
-            </div>
-
-            <div id="media-error" class="hidden mb-4 p-3 bg-rose-50 border border-rose-200 rounded-xl text-rose-700 text-xs font-semibold"></div>
-
-            <!-- Resume -->
-            <div class="mb-7">
-                <h5 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3"><i class="fa-solid fa-file-pdf text-rose-500 mr-2"></i>Resume / CV (PDF) — Used by every Download button</h5>
-                <div class="flex flex-wrap items-center justify-between gap-4 p-4 bg-slate-50 border border-slate-200 rounded-2xl">
-                    <div class="flex items-center space-x-3 min-w-0">
-                        <div class="w-12 h-12 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center text-xl shrink-0"><i class="fa-solid fa-file-lines"></i></div>
-                        <div class="min-w-0">
-                            <p class="text-sm font-bold text-slate-800">Resume PDF</p>
-                            <p id="label-resume" class="text-xs text-slate-500 truncate">No file uploaded yet</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center space-x-2 shrink-0">
-                        <label class="cursor-pointer bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition">Choose PDF<input type="file" accept=".pdf,application/pdf" class="hidden" onchange="handleMedia(this,'resume')"></label>
-                        <button onclick="clearMedia('resume')" class="text-xs font-bold text-slate-400 hover:text-rose-600 px-3 py-2.5">Remove</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Profile Photo -->
-            <div class="mb-7">
-                <h5 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3"><i class="fa-solid fa-user text-brand-600 mr-2"></i>Profile Photo</h5>
-                <div class="flex flex-wrap items-center justify-between gap-4 p-4 bg-slate-50 border border-slate-200 rounded-2xl">
-                    <div class="flex items-center space-x-3 min-w-0">
-                        <img id="thumb-photo" alt="" class="w-12 h-12 rounded-xl object-cover bg-slate-200 border border-slate-200 shrink-0">
-                        <div class="min-w-0">
-                            <p class="text-sm font-bold text-slate-800">Hero Portrait</p>
-                            <p id="label-photo" class="text-xs text-slate-500 truncate">Using default placeholder</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center space-x-2 shrink-0">
-                        <label class="cursor-pointer bg-white border border-slate-300 hover:border-brand-500 text-slate-700 text-xs font-bold px-4 py-2.5 rounded-xl transition">Choose Image<input type="file" accept="image/*" class="hidden" onchange="handleMedia(this,'photo')"></label>
-                        <button onclick="clearMedia('photo')" class="text-xs font-bold text-slate-400 hover:text-rose-600 px-3 py-2.5">Remove</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Certificate Images -->
-            <div class="mb-7">
-                <h5 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3"><i class="fa-solid fa-certificate text-amber-500 mr-2"></i>Certificate Images (shown in the preview modal)</h5>
-                <div id="media-certs" class="space-y-3"></div>
-            </div>
-
-            <div class="pt-5 border-t border-slate-200 flex flex-wrap items-center justify-between gap-3">
-                <p class="text-xs text-slate-500 max-w-md leading-relaxed">Uploads are saved in <span class="font-semibold text-slate-700">this browser only</span>. Send me the files if you want them permanently embedded in the HTML.</p>
-                <div class="flex space-x-3">
-                    <button onclick="resetMedia()" class="text-xs font-bold text-slate-500 hover:text-rose-600 px-4 py-2.5">Reset All</button>
-                    <button onclick="closeMediaModal()" class="bg-slate-900 hover:bg-slate-800 text-white font-semibold px-6 py-2.5 rounded-xl text-sm transition">Done</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- JavaScript Code -->
     <script>
         // Mobile Menu Toggle
@@ -861,70 +734,28 @@
             });
         });
 
-        // Toast Notification
-        function showToast(message, icon = 'fa-file-arrow-down') {
+        // Resume file stored next to this page
+        const DEFAULT_RESUME = 'kristel_joy_tejada.docx';
+
+        function showToast(message, icon) {
             const notif = document.createElement('div');
             notif.className = 'fixed bottom-5 right-5 z-[60] bg-slate-900 text-white px-6 py-3 rounded-2xl shadow-2xl flex items-center space-x-3';
-            notif.innerHTML = '<i class="fa-solid ' + icon + ' text-brand-400 text-lg"></i><span>' + message + '</span>';
+            notif.innerHTML = '<i class="fa-solid ' + (icon || 'fa-file-arrow-down') + ' text-brand-400 text-lg"></i><span>' + message + '</span>';
             document.body.appendChild(notif);
             setTimeout(() => {
                 notif.remove();
             }, 3500);
         }
 
-        // Download Resume (uses the uploaded PDF when one exists, otherwise the file in this folder)
-        const DEFAULT_RESUME = 'kristel_joy_tejada.docx';
-
+        // Download Resume
         function downloadResume() {
-            const target = (media.resume && media.resume.dataUrl)
-                ? { href: media.resume.dataUrl, name: media.resume.name || 'Resume' }
-                : { href: DEFAULT_RESUME, name: DEFAULT_RESUME };
             const a = document.createElement('a');
-            a.href = target.href;
-            a.download = target.name;
+            a.href = DEFAULT_RESUME;
+            a.download = DEFAULT_RESUME;
             document.body.appendChild(a);
             a.click();
             a.remove();
-            showToast('Downloading ' + target.name, 'fa-file-arrow-down');
-        }
-
-        // Experience Tabs Switching
-        function switchExpTab(tabName) {
-            const tabs = ['work', 'internship', 'volunteer'];
-            tabs.forEach(t => {
-                const content = document.getElementById(`tab-${t}`);
-                const btn = document.getElementById(`btn-${t}`);
-                if (t === tabName) {
-                    content.classList.remove('hidden');
-                    btn.className = 'px-6 py-2.5 rounded-xl text-sm font-semibold transition bg-brand-600 text-white shadow-sm';
-                } else {
-                    content.classList.add('hidden');
-                    btn.className = 'px-6 py-2.5 rounded-xl text-sm font-semibold transition text-slate-600 hover:text-slate-900';
-                }
-            });
-        }
-
-        // Project Filtering
-        function filterProjects(category) {
-            const buttons = ['all', 'capstone', 'web', 'mobile', 'academic'];
-            buttons.forEach(b => {
-                const btn = document.getElementById(`filter-${b}`);
-                if (b === category) {
-                    btn.className = 'px-5 py-2 rounded-xl text-xs font-bold transition bg-brand-600 text-white shadow-sm';
-                } else {
-                    btn.className = 'px-5 py-2 rounded-xl text-xs font-bold transition bg-slate-100 text-slate-600 hover:bg-slate-200';
-                }
-            });
-
-            const cards = document.querySelectorAll('.project-card');
-            cards.forEach(card => {
-                const cat = card.getAttribute('data-category');
-                if (category === 'all' || cat === category) {
-                    card.style.display = 'flex';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
+            showToast('Downloading ' + DEFAULT_RESUME);
         }
 
         // Certificate Modal Functions
@@ -932,7 +763,7 @@
             document.getElementById('cert-modal-title').innerText = title;
             document.getElementById('cert-modal-issuer').innerText = issuer;
             document.getElementById('cert-modal-date').innerText = 'Earned: ' + date;
-            document.getElementById('cert-modal-img').src = media.certs[title] || imgUrl;
+            document.getElementById('cert-modal-img').src = imgUrl;
             document.getElementById('cert-modal-verify').href = verifyUrl;
             document.getElementById('cert-modal').classList.remove('hidden');
         }
@@ -940,251 +771,6 @@
         function closeCertModal() {
             document.getElementById('cert-modal').classList.add('hidden');
         }
-
-        // Project Modal Functions
-        function openProjectModal(title, role, purpose, tech, features, contributions, img1, img2) {
-            const key = PROJECT_KEY_BY_TITLE[title];
-            const shots = (key && media.projects[key]) || [];
-            document.getElementById('proj-modal-title').innerText = title;
-            document.getElementById('proj-modal-role').innerText = 'Role: ' + role;
-            document.getElementById('proj-modal-purpose').innerText = purpose;
-            document.getElementById('proj-modal-tech').innerText = tech;
-            document.getElementById('proj-modal-features').innerText = features;
-            document.getElementById('proj-modal-contributions').innerText = contributions;
-            document.getElementById('proj-modal-img1').src = shots[0] || img1;
-            document.getElementById('proj-modal-img2').src = shots[1] || img2;
-            document.getElementById('project-modal').classList.remove('hidden');
-        }
-
-        function closeProjectModal() {
-            document.getElementById('project-modal').classList.add('hidden');
-        }
-
-        // ===== Media Manager (photo, certificates, resume, project shots) =====
-        const MEDIA_KEY = 'portfolio-media-v1';
-
-        const CERT_ITEMS = [
-            { key: 'IT Specialist in Software Development', label: 'IT Specialist in Software Development', img: 'https://placehold.co/700x500/4f46e5/ffffff?text=IT+Specialist+Certificate' },
-            { key: 'CCNAv7: Enterprise Networking', label: 'CCNAv7: Enterprise Networking', img: 'https://placehold.co/700x500/312e81/ffffff?text=CCNAv7+Certificate' },
-            { key: 'Civil Service Professional Eligibility', label: 'Civil Service Professional Eligibility', img: 'https://placehold.co/700x500/581c87/ffffff?text=Civil+Service+Eligibility' },
-            { key: 'Computer Systems Servicing NC II', label: 'Computer Systems Servicing (NC II)', img: 'https://placehold.co/700x500/166534/ffffff?text=TESDA+NC+II+Certificate' },
-            { key: 'Full Stack Web Development Bootcamp', label: 'Full Stack Web Development Bootcamp', img: 'https://placehold.co/700x500/b45309/ffffff?text=Bootcamp+Certificate' },
-            { key: 'Best Capstone Project Award', label: 'Best Capstone Project System Award', img: 'https://placehold.co/700x500/be123c/ffffff?text=Capstone+Award+Certificate' }
-        ];
-
-        const PROJECT_ITEMS = [
-            { key: 'capstone', label: 'Smart Campus IoT Energy Monitor' },
-            { key: 'web', label: 'ShopEase E-Commerce Web App' },
-            { key: 'mobile', label: 'CampusNav Mobile App' },
-            { key: 'academic', label: 'University Enrollment System' }
-        ];
-
-        const PROJECT_KEY_BY_TITLE = {
-            'Smart Campus IoT Energy Monitor': 'capstone',
-            'ShopEase E-Commerce Web App': 'web',
-            'CampusNav Mobile App': 'mobile',
-            'University Enrollment System': 'academic'
-        };
-
-        let media = { resume: null, photo: null, certs: {}, projects: {} };
-        let mediaSnapshot = null;
-        let mediaDefaults = { photo: '', covers: {} };
-
-        function loadMedia() {
-            try {
-                const raw = localStorage.getItem(MEDIA_KEY);
-                if (raw) media = Object.assign(media, JSON.parse(raw));
-            } catch (e) { /* storage unavailable */ }
-            mediaSnapshot = JSON.stringify(media);
-        }
-
-        function saveMedia() {
-            try {
-                localStorage.setItem(MEDIA_KEY, JSON.stringify(media));
-                mediaSnapshot = JSON.stringify(media);
-                showMediaError('');
-                return true;
-            } catch (e) {
-                try { media = JSON.parse(mediaSnapshot); } catch (err) { }
-                showMediaError('Browser storage is full. Remove some uploads or use smaller images (resume must be under ~4 MB).');
-                return false;
-            }
-        }
-
-        function showMediaError(msg) {
-            const box = document.getElementById('media-error');
-            box.innerText = msg;
-            box.classList.toggle('hidden', !msg);
-        }
-
-        function readFile(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = () => resolve(reader.result);
-                reader.onerror = reject;
-                reader.readAsDataURL(file);
-            });
-        }
-
-        function processImage(file, maxDim, quality) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onerror = reject;
-                reader.onload = () => {
-                    const img = new Image();
-                    img.onerror = reject;
-                    img.onload = () => {
-                        let w = img.naturalWidth, h = img.naturalHeight;
-                        const scale = Math.min(1, maxDim / Math.max(w, h));
-                        w = Math.max(1, Math.round(w * scale));
-                        h = Math.max(1, Math.round(h * scale));
-                        const canvas = document.createElement('canvas');
-                        canvas.width = w; canvas.height = h;
-                        const ctx = canvas.getContext('2d');
-                        ctx.fillStyle = '#ffffff';
-                        ctx.fillRect(0, 0, w, h);
-                        ctx.drawImage(img, 0, 0, w, h);
-                        resolve(canvas.toDataURL('image/jpeg', quality));
-                    };
-                    img.src = reader.result;
-                };
-                reader.readAsDataURL(file);
-            });
-        }
-
-        async function handleMedia(input, type, key) {
-            const files = Array.from(input.files || []);
-            if (!files.length) return;
-            try {
-                if (type === 'resume') {
-                    const f = files[0];
-                    if (f.size > 4.5 * 1024 * 1024) {
-                        showMediaError('Resume is too large for browser storage (' + (f.size / 1048576).toFixed(1) + ' MB). Maximum is about 4.5 MB.');
-                        input.value = '';
-                        return;
-                    }
-                    media.resume = { name: f.name, size: f.size, dataUrl: await readFile(f) };
-                } else if (type === 'photo') {
-                    media.photo = await processImage(files[0], 1200, 0.85);
-                } else if (type === 'cert') {
-                    media.certs[key] = await processImage(files[0], 1600, 0.8);
-                } else if (type === 'project') {
-                    media.projects[key] = await Promise.all(files.slice(0, 2).map(f => processImage(f, 1280, 0.78)));
-                }
-                saveMedia();
-                applyMedia();
-                showToast('Upload saved', 'fa-circle-check');
-            } catch (e) {
-                showMediaError('Could not read that file. Please choose a valid image or PDF.');
-            }
-            input.value = '';
-        }
-
-        function clearMedia(type, key) {
-            if (type === 'resume') media.resume = null;
-            else if (type === 'photo') media.photo = null;
-            else if (type === 'cert') delete media.certs[key];
-            else if (type === 'project') delete media.projects[key];
-            saveMedia();
-            applyMedia();
-        }
-
-        function resetMedia() {
-            media = { resume: null, photo: null, certs: {}, projects: {} };
-            saveMedia();
-            applyMedia();
-            showToast('All uploads removed', 'fa-eraser');
-        }
-
-        function formatSize(bytes) {
-            if (!bytes) return '';
-            return bytes > 1048576 ? (bytes / 1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(bytes / 1024)) + ' KB';
-        }
-
-        function mediaRow(id, title, sub, thumb, accept, multiple, type, key) {
-            return '<div class="flex flex-wrap items-center justify-between gap-3 p-3.5 bg-slate-50 border border-slate-200 rounded-2xl">' +
-                '<div class="flex items-center space-x-3 min-w-0 flex-1">' + thumb +
-                '<div class="min-w-0"><p class="text-sm font-bold text-slate-800 truncate">' + title + '</p>' +
-                '<p id="' + id + '" class="text-xs text-slate-500 truncate">' + sub + '</p></div></div>' +
-                '<div class="flex items-center space-x-2 shrink-0">' +
-                '<label class="cursor-pointer bg-white border border-slate-300 hover:border-brand-500 text-slate-700 text-xs font-bold px-3.5 py-2 rounded-lg transition">Choose<input type="file" accept="' + accept + '"' + (multiple ? ' multiple' : '') + ' class="hidden" onchange="handleMedia(this,\'' + type + '\'' + (key ? ',\'' + key + '\'' : '') + ')"></label>' +
-                '<button onclick="clearMedia(\'' + type + '\'' + (key ? ',\'' + key + '\'' : '') + ')" class="text-xs font-bold text-slate-400 hover:text-rose-600 px-2.5 py-2">Remove</button>' +
-                '</div></div>';
-        }
-
-        function renderMediaRows() {
-            document.getElementById('media-certs').innerHTML = CERT_ITEMS.map((c, i) =>
-                mediaRow('label-cert-' + i, c.label, 'Placeholder in use', '<img id="thumb-cert-' + i + '" alt="" class="w-12 h-12 rounded-lg object-cover bg-slate-200 border border-slate-200 shrink-0">', 'image/*', false, 'cert', c.key)
-            ).join('');
-        }
-
-        function applyMedia() {
-            const hero = document.getElementById('hero-photo');
-            if (hero) hero.src = media.photo || mediaDefaults.photo;
-
-            PROJECT_ITEMS.forEach(p => {
-                const cover = document.getElementById('cover-' + p.key);
-                const shot = (media.projects[p.key] || [])[0];
-                if (cover) cover.src = shot || cover.dataset.default;
-            });
-            refreshMediaUI();
-        }
-
-        function refreshMediaUI() {
-            const rLabel = document.getElementById('label-resume');
-            rLabel.innerText = media.resume
-                ? media.resume.name + ' · ' + formatSize(media.resume.size) + ' · ready to download'
-                : 'No upload yet — Download buttons use ' + DEFAULT_RESUME;
-
-            const pLabel = document.getElementById('label-photo');
-            pLabel.innerText = media.photo ? 'Custom photo in use' : 'Using default placeholder';
-            document.getElementById('thumb-photo').src = media.photo || mediaDefaults.photo;
-
-            CERT_ITEMS.forEach((c, i) => {
-                const thumb = document.getElementById('thumb-cert-' + i);
-                const label = document.getElementById('label-cert-' + i);
-                if (!thumb || !label) return;
-                thumb.src = media.certs[c.key] || c.img;
-                label.innerText = media.certs[c.key] ? 'Custom image in use' : 'Placeholder in use';
-            });
-
-            PROJECT_ITEMS.forEach((p, i) => {
-                const thumb = document.getElementById('thumb-proj-' + i);
-                const label = document.getElementById('label-proj-' + i);
-                if (!thumb || !label) return;
-                const shots = media.projects[p.key] || [];
-                thumb.src = shots[0] || (mediaDefaults.covers[p.key] || '');
-                label.innerText = shots.length ? shots.length + ' screenshot(s) in use' : 'Placeholder in use';
-            });
-        }
-
-        function openMediaModal() {
-            renderMediaRows();
-            refreshMediaUI();
-            showMediaError('');
-            document.getElementById('media-modal').classList.remove('hidden');
-            const mm = document.getElementById('mobile-menu');
-            if (mm) mm.classList.add('hidden');
-        }
-
-        function closeMediaModal() {
-            document.getElementById('media-modal').classList.add('hidden');
-        }
-
-        // Capture defaults and restore saved uploads
-        (function initMedia() {
-            const hero = document.getElementById('hero-photo');
-            if (hero) mediaDefaults.photo = hero.src;
-            PROJECT_ITEMS.forEach(p => {
-                const cover = document.getElementById('cover-' + p.key);
-                if (cover) {
-                    mediaDefaults.covers[p.key] = cover.src;
-                    cover.dataset.default = cover.src;
-                }
-            });
-            loadMedia();
-            applyMedia();
-        })();
 
         // Contact Form Submission Handler
         function handleContactSubmit(event) {
@@ -1203,21 +789,13 @@
             }
         }
 
-        // Close Modals on Outside Click
+        // Close Modal on Outside Click
         window.onclick = function(event) {
             const certModal = document.getElementById('cert-modal');
-            const projModal = document.getElementById('project-modal');
-            const mediaModal = document.getElementById('media-modal');
             if (event.target === certModal) {
                 closeCertModal();
             }
-            if (event.target === projModal) {
-                closeProjectModal();
-            }
-            if (event.target === mediaModal) {
-                closeMediaModal();
-            }
-        }
+        };
     </script>
 </body>
 </html>
