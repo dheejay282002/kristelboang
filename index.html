@@ -152,7 +152,7 @@
                         </a>
                         <button onclick="downloadResume()" class="inline-flex items-center space-x-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 font-semibold px-6 py-3.5 rounded-xl shadow-sm transition">
                             <i class="fa-solid fa-download text-brand-600"></i>
-                            <span>Download CV (.PDF)</span>
+                            <span>Download Resume</span>
                         </button>
                     </div>
 
@@ -174,7 +174,7 @@
                         <!-- Main Card -->
                         <div class="relative bg-white border border-slate-200 rounded-3xl p-6 shadow-xl max-w-sm w-full">
                             <div class="relative w-full h-80 rounded-2xl overflow-hidden bg-gradient-to-br from-indigo-100 to-slate-200 shadow-inner">
-                                <img id="hero-photo" src="https://placehold.co/400x500/4f46e5/ffffff?text=Kristel+Joy+Tejada" alt="Kristel Joy V. Tejada Professional Photo" class="w-full h-full object-cover object-top hover:scale-105 transition duration-500" onerror="this.src='https://placehold.co/400x500/e2e8f0/64748b?text=Photo+Unavailable'">
+                                <img id="hero-photo" src="Picture1.jpg" alt="Kristel Joy V. Tejada Professional Photo" class="w-full h-full object-cover object-top hover:scale-105 transition duration-500" onerror="this.onerror=null;this.src='https://placehold.co/400x500/4f46e5/ffffff?text=Kristel+Joy+Tejada'">
                                 
                                 <div class="absolute bottom-3 left-3 right-3 bg-white/90 backdrop-blur-md px-4 py-2.5 rounded-xl border border-white/40 flex items-center justify-between">
                                     <div>
@@ -872,19 +872,20 @@
             }, 3500);
         }
 
-        // Download Resume (uses the uploaded PDF when one exists)
+        // Download Resume (uses the uploaded PDF when one exists, otherwise the file in this folder)
+        const DEFAULT_RESUME = 'kristel_joy_tejada.docx';
+
         function downloadResume() {
-            if (media.resume && media.resume.dataUrl) {
-                const a = document.createElement('a');
-                a.href = media.resume.dataUrl;
-                a.download = media.resume.name || 'Resume.pdf';
-                document.body.appendChild(a);
-                a.click();
-                a.remove();
-                showToast('Downloading ' + (media.resume.name || 'Resume.pdf'), 'fa-file-arrow-down');
-                return;
-            }
-            showToast('No resume uploaded yet — open Uploads to add your PDF.', 'fa-circle-exclamation');
+            const target = (media.resume && media.resume.dataUrl)
+                ? { href: media.resume.dataUrl, name: media.resume.name || 'Resume' }
+                : { href: DEFAULT_RESUME, name: DEFAULT_RESUME };
+            const a = document.createElement('a');
+            a.href = target.href;
+            a.download = target.name;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            showToast('Downloading ' + target.name, 'fa-file-arrow-down');
         }
 
         // Experience Tabs Switching
@@ -1133,7 +1134,7 @@
             const rLabel = document.getElementById('label-resume');
             rLabel.innerText = media.resume
                 ? media.resume.name + ' · ' + formatSize(media.resume.size) + ' · ready to download'
-                : 'No file uploaded yet';
+                : 'No upload yet — Download buttons use ' + DEFAULT_RESUME;
 
             const pLabel = document.getElementById('label-photo');
             pLabel.innerText = media.photo ? 'Custom photo in use' : 'Using default placeholder';
