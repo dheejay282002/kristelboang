@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kristel Joy V. Tejada | BSIT Resume Portfolio</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            200: '#c7d2fe',
+                            300: '#a5b4fc',
+                            400: '#818cf8',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            800: '#3730a3',
+                            900: '#312e81',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom scrollbar & aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c7d2fe;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #818cf8;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased selection:bg-brand-500 selection:text-white">
+
+    <!-- Navigation Bar -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Domain Brand Badge -->
+                <a href="#hero" class="flex items-center space-x-2 group">
+                    <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-400 flex items-center justify-center text-white font-bold shadow-md shadow-brand-500/30 group-hover:scale-105 transition">
+                        KT
+                    </div>
+                    <span class="font-bold text-lg bg-gradient-to-r from-slate-900 to-brand-700 bg-clip-text text-transparent">
+                        Kristel Joy V. Tejada
+                    </span>
+                </a>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-1 lg:space-x-6 text-sm font-medium text-slate-600">
+                    <a href="#profile" class="hover:text-brand-600 transition">Profile</a>
+                    <a href="#skills" class="hover:text-brand-600 transition">Skills</a>
+                    <a href="#certificates" class="hover:text-brand-600 transition">Certificates</a>
+                    <a href="#experience" class="hover:text-brand-600 transition">Experience</a>
+                    <a href="#contact" class="hover:text-brand-600 transition">Contact</a>
+                </div>
+
+                <!-- Action Button -->
+                <div class="hidden md:flex items-center space-x-3">
+                    <button onclick="openMediaModal()" class="inline-flex items-center space-x-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 text-sm font-semibold px-4 py-2 rounded-xl shadow-sm transition">
+                        <i class="fa-solid fa-cloud-arrow-up text-brand-600"></i>
+                        <span>Uploads</span>
+                    </button>
+                    <button onclick="downloadResume()" class="inline-flex items-center space-x-2 bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold px-4 py-2 rounded-xl shadow-lg shadow-brand-600/20 transition transform active:scale-95">
+                        <i class="fa-solid fa-file-arrow-down"></i>
+                        <span>Resume</span>
+                    </button>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                    <button id="menu-btn" class="text-slate-700 hover:text-brand-600 focus:outline-none p-2">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-slate-200 px-4 pt-2 pb-4 space-y-2">
+            <a href="#profile" class="block py-2 text-slate-600 hover:text-brand-600 font-medium">Profile</a>
+            <a href="#skills" class="block py-2 text-slate-600 hover:text-brand-600 font-medium">Skills</a>
+            <a href="#certificates" class="block py-2 text-slate-600 hover:text-brand-600 font-medium">Certificates</a>
+            <a href="#experience" class="block py-2 text-slate-600 hover:text-brand-600 font-medium">Experience</a>
+            <a href="#contact" class="block py-2 text-slate-600 hover:text-brand-600 font-medium">Contact</a>
+            <button onclick="openMediaModal()" class="w-full mt-2 inline-flex items-center justify-center space-x-2 bg-white border border-slate-300 text-slate-700 text-sm font-semibold px-4 py-2.5 rounded-xl">
+                <i class="fa-solid fa-cloud-arrow-up text-brand-600"></i>
+                <span>Upload Photos / Certs / Resume</span>
+            </button>
+            <button onclick="downloadResume()" class="w-full mt-2 inline-flex items-center justify-center space-x-2 bg-brand-600 text-white text-sm font-semibold px-4 py-2.5 rounded-xl">
+                <i class="fa-solid fa-file-arrow-down"></i>
+                <span>Download Resume</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden bg-gradient-to-b from-indigo-50/50 via-white to-slate-50">
+        <div class="absolute top-0 right-0 -z-10 w-96 h-96 bg-indigo-200/40 rounded-full blur-3xl transform translate-x-1/3 -translate-y-1/4"></div>
+        <div class="absolute bottom-0 left-0 -z-10 w-96 h-96 bg-purple-200/30 rounded-full blur-3xl transform -translate-x-1/3 translate-y-1/4"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                
+                <!-- Left Column: Introduction -->
+                <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+                    <div class="inline-flex items-center space-x-2 bg-brand-50 border border-brand-100 px-3.5 py-1.5 rounded-full text-brand-700 text-xs font-semibold uppercase tracking-wider shadow-sm">
+                        <span class="w-2 h-2 rounded-full bg-brand-600 animate-pulse"></span>
+                        <span>Open to Work — Customer Service &amp; IT Roles</span>
+                    </div>
+
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-tight">
+                        Hi, I'm <span class="bg-gradient-to-r from-brand-600 to-indigo-500 bg-clip-text text-transparent">Kristel Joy V. Tejada</span>
+                    </h1>
+
+                    <p class="text-xl sm:text-2xl font-medium text-slate-600">
+                        BS Information Technology Student · 3rd Year
+                    </p>
+
+                    <p class="text-slate-600 text-base sm:text-lg max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+                        I am looking for a position where I can use my strong communication skills, professionalism, and positive work attitude to provide excellent customer service and contribute to a productive and welcoming work environment.
+                    </p>
+
+                    <!-- Hero CTA Buttons -->
+                    <div class="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-2">
+                        <a href="#contact" class="inline-flex items-center space-x-2 bg-slate-900 hover:bg-slate-800 text-white font-semibold px-6 py-3.5 rounded-xl shadow-lg shadow-slate-900/10 transition transform active:scale-95">
+                            <i class="fa-solid fa-paper-plane text-brand-400"></i>
+                            <span>Get in Touch</span>
+                        </a>
+                        <button onclick="downloadResume()" class="inline-flex items-center space-x-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 font-semibold px-6 py-3.5 rounded-xl shadow-sm transition">
+                            <i class="fa-solid fa-download text-brand-600"></i>
+                            <span>Download CV (.PDF)</span>
+                        </button>
+                    </div>
+
+                    <!-- Quick Social Links -->
+                    <div class="pt-4 flex items-center justify-center lg:justify-start space-x-4 text-slate-500">
+                        <span class="text-sm font-medium text-slate-400">Connect:</span>
+                        <a href="https://linkedin.com" target="_blank" class="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-700 hover:text-brand-600 hover:border-brand-300 shadow-sm transition"><i class="fa-brands fa-linkedin-in text-lg"></i></a>
+                        <a href="tel:+639097899177" class="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-700 hover:text-brand-600 hover:border-brand-300 shadow-sm transition"><i class="fa-solid fa-phone text-lg"></i></a>
+                        <a href="mailto:tejadakristeljoy04@gmail.com" class="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-700 hover:text-brand-600 hover:border-brand-300 shadow-sm transition"><i class="fa-solid fa-envelope text-lg"></i></a>
+                    </div>
+                </div>
+
+                <!-- Right Column: Professional Photograph & Badge Card -->
+                <div class="lg:col-span-5 flex justify-center">
+                    <div class="relative">
+                        <!-- Decorative Backdrop Ring -->
+                        <div class="absolute -inset-4 bg-gradient-to-tr from-brand-600 to-indigo-300 rounded-3xl opacity-30 blur-lg"></div>
+                        
+                        <!-- Main Card -->
+                        <div class="relative bg-white border border-slate-200 rounded-3xl p-6 shadow-xl max-w-sm w-full">
+                            <div class="relative w-full h-80 rounded-2xl overflow-hidden bg-gradient-to-br from-indigo-100 to-slate-200 shadow-inner">
+                                <img id="hero-photo" src="https://placehold.co/400x500/4f46e5/ffffff?text=Kristel+Joy+Tejada" alt="Kristel Joy V. Tejada Professional Photo" class="w-full h-full object-cover object-top hover:scale-105 transition duration-500" onerror="this.src='https://placehold.co/400x500/e2e8f0/64748b?text=Photo+Unavailable'">
+                                
+                                <div class="absolute bottom-3 left-3 right-3 bg-white/90 backdrop-blur-md px-4 py-2.5 rounded-xl border border-white/40 flex items-center justify-between">
+                                    <div>
+                                        <p class="text-xs font-bold text-slate-900">Kristel Joy V. Tejada</p>
+                                        <p class="text-[10px] text-brand-600 font-semibold">BSIT 3rd Year Student</p>
+                                    </div>
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-green-100 text-green-800">
+                                        <span class="w-1.5 h-1.5 mr-1 bg-green-500 rounded-full"></span> Available
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="mt-6 grid grid-cols-2 gap-4 text-center">
+                                <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                                    <p class="text-2xl font-bold text-brand-600">3rd</p>
+                                    <p class="text-xs text-slate-500 font-medium mt-0.5">Year, BS Information Technology</p>
+                                </div>
+                                <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                                    <p class="text-2xl font-bold text-brand-600">1+</p>
+                                    <p class="text-xs text-slate-500 font-medium mt-0.5">Part-Time Work Experience</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Personal Profile & Background Section -->
+    <section id="profile" class="py-20 bg-white border-t border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-xs font-bold uppercase tracking-widest text-brand-600 mb-2">Professional Background</h2>
+                <h3 class="text-3xl font-extrabold text-slate-900 sm:text-4xl">Profile, Objective & Education</h3>
+                <p class="mt-4 text-slate-600">My career objective, personal details, and educational background.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                
+                <!-- Career Objective -->
+                <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-8 shadow-sm hover:shadow-md transition">
+                    <div class="w-12 h-12 bg-brand-100 rounded-xl flex items-center justify-center text-brand-600 mb-6 text-xl">
+                        <i class="fa-solid fa-bullseye"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-slate-900 mb-3">Career Objective</h4>
+                    <p class="text-slate-600 text-sm leading-relaxed">
+                        To obtain a position where I can use my strong communication skills, professionalism, and positive work attitude to provide excellent customer service and contribute to a productive and welcoming work environment.
+                    </p>
+                    <div class="mt-6 pt-6 border-t border-slate-200">
+                        <span class="text-xs font-semibold text-brand-600 uppercase tracking-wider">Primary Focus</span>
+                        <p class="text-sm font-medium text-slate-700 mt-1">Customer Service &amp; IT Support Roles</p>
+                    </div>
+                </div>
+
+                <!-- Personal Information -->
+                <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-8 shadow-sm hover:shadow-md transition">
+                    <div class="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center text-indigo-600 mb-6 text-xl">
+                        <i class="fa-solid fa-address-card"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-slate-900 mb-3">Personal Information</h4>
+                    <ul class="space-y-3.5 text-sm">
+                        <li class="flex items-start space-x-3">
+                            <i class="fa-solid fa-location-dot text-brand-600 mt-0.5"></i>
+                            <div>
+                                <p class="text-xs text-slate-400 font-medium">Address</p>
+                                <p class="font-medium text-slate-700">Purok 11B, Villa Luna, Cauayan City, Isabela</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start space-x-3">
+                            <i class="fa-solid fa-phone text-brand-600 mt-0.5"></i>
+                            <div>
+                                <p class="text-xs text-slate-400 font-medium">Mobile</p>
+                                <a href="tel:+639097899177" class="font-medium text-slate-700 hover:text-brand-600">0909 789 9177</a>
+                            </div>
+                        </li>
+                        <li class="flex items-start space-x-3">
+                            <i class="fa-solid fa-envelope text-brand-600 mt-0.5"></i>
+                            <div>
+                                <p class="text-xs text-slate-400 font-medium">Email</p>
+                                <a href="mailto:tejadakristeljoy04@gmail.com" class="font-medium text-slate-700 hover:text-brand-600 break-all">tejadakristeljoy04@gmail.com</a>
+                            </div>
+                        </li>
+                        <li class="flex items-start space-x-3">
+                            <i class="fa-solid fa-graduation-cap text-brand-600 mt-0.5"></i>
+                            <div>
+                                <p class="text-xs text-slate-400 font-medium">Current Status</p>
+                                <p class="font-medium text-slate-700">3rd Year, BS Information Technology</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Educational Background Summary -->
+                <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-8 shadow-sm hover:shadow-md transition">
+                    <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center text-purple-600 mb-6 text-xl">
+                        <i class="fa-solid fa-school"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-slate-900 mb-3">Education Summary</h4>
+                    <ul class="space-y-4 text-sm">
+                        <li class="border-l-2 border-brand-600 pl-3">
+                            <p class="font-bold text-slate-900">Bachelor of Science in Information Technology</p>
+                            <p class="text-xs text-slate-500">Isabela State University • 3rd Year</p>
+                            <p class="text-xs text-brand-600 font-medium mt-0.5">Currently Enrolled</p>
+                        </li>
+                        <li class="border-l-2 border-slate-300 pl-3">
+                            <p class="font-bold text-slate-900">Secondary Education</p>
+                            <p class="text-xs text-slate-500">Cauayan City Science and Technology High School • 2023 - 2024</p>
+                        </li>
+                        <li class="border-l-2 border-slate-300 pl-3">
+                            <p class="font-bold text-slate-900">Primary Education</p>
+                            <p class="text-xs text-slate-500">Villa Luna Elementary School • 2016 - 2017</p>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <!-- Detailed Educational Timeline Cards -->
+            <div class="mt-12 bg-gradient-to-r from-slate-900 to-indigo-950 text-white rounded-3xl p-8 lg:p-12 shadow-xl">
+                <h4 class="text-2xl font-bold mb-6 flex items-center">
+                    <i class="fa-solid fa-award text-brand-400 mr-3"></i> Educational Background
+                </h4>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white/10 backdrop-blur-sm border border-white/10 p-6 rounded-2xl">
+                        <span class="text-xs font-semibold text-indigo-300 uppercase tracking-wider">Tertiary Education</span>
+                        <h5 class="text-lg font-bold mt-1">Bachelor of Science in Information Technology</h5>
+                        <p class="text-xs text-slate-300 mt-1">Isabela State University</p>
+                        <p class="text-xs bg-brand-500/30 text-brand-200 px-2.5 py-1 rounded-lg mt-3 inline-block font-medium">3rd Year • Currently Enrolled</p>
+                    </div>
+                    <div class="bg-white/10 backdrop-blur-sm border border-white/10 p-6 rounded-2xl">
+                        <span class="text-xs font-semibold text-indigo-300 uppercase tracking-wider">Secondary Education</span>
+                        <h5 class="text-lg font-bold mt-1">Cauayan City Science and Technology High School</h5>
+                        <p class="text-xs text-slate-300 mt-1">2023 - 2024</p>
+                        <p class="text-xs bg-brand-500/30 text-brand-200 px-2.5 py-1 rounded-lg mt-3 inline-block font-medium">Secondary Completed</p>
+                    </div>
+                    <div class="bg-white/10 backdrop-blur-sm border border-white/10 p-6 rounded-2xl">
+                        <span class="text-xs font-semibold text-indigo-300 uppercase tracking-wider">Primary Education</span>
+                        <h5 class="text-lg font-bold mt-1">Villa Luna Elementary School</h5>
+                        <p class="text-xs text-slate-300 mt-1">2016 - 2017</p>
+                        <p class="text-xs bg-brand-500/30 text-brand-200 px-2.5 py-1 rounded-lg mt-3 inline-block font-medium">Primary Completed</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="py-20 bg-slate-50 border-t border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-xs font-bold uppercase tracking-widest text-brand-600 mb-2">Skills &amp; Strengths</h2>
+                <h3 class="text-3xl font-extrabold text-slate-900 sm:text-4xl">What I Bring to the Team</h3>
+                <p class="mt-4 text-slate-600">Core competencies I have built through my studies and my part-time work experience.</p>
+            </div>
+
+            <div class="max-w-5xl mx-auto">
+                
+                <!-- Core Competencies -->
+                <div class="bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-8 shadow-sm">
+                    <div class="flex items-center space-x-3 mb-8">
+                        <div class="w-10 h-10 rounded-xl bg-brand-100 text-brand-600 flex items-center justify-center font-bold">
+                            <i class="fa-solid fa-people-group"></i>
+                        </div>
+                        <h4 class="text-2xl font-bold text-slate-900">Core Competencies</h4>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                        <div class="flex items-start space-x-3 bg-slate-50 border border-slate-100 rounded-2xl p-4">
+                            <div class="w-9 h-9 rounded-lg bg-brand-100 text-brand-600 flex items-center justify-center shrink-0"><i class="fa-solid fa-comments"></i></div>
+                            <div>
+                                <p class="text-sm font-bold text-slate-800">Customer Service &amp; Interpersonal Communication</p>
+                                <p class="text-xs text-slate-500 mt-1 leading-relaxed">Strong customer service and interpersonal communication skills.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start space-x-3 bg-slate-50 border border-slate-100 rounded-2xl p-4">
+                            <div class="w-9 h-9 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center shrink-0"><i class="fa-solid fa-gauge-high"></i></div>
+                            <div>
+                                <p class="text-sm font-bold text-slate-800">Works Well Under Pressure</p>
+                                <p class="text-xs text-slate-500 mt-1 leading-relaxed">Able to work under pressure with minimal supervision.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start space-x-3 bg-slate-50 border border-slate-100 rounded-2xl p-4">
+                            <div class="w-9 h-9 rounded-lg bg-purple-100 text-purple-600 flex items-center justify-center shrink-0"><i class="fa-solid fa-bolt"></i></div>
+                            <div>
+                                <p class="text-sm font-bold text-slate-800">Fast Learner &amp; Highly Adaptable</p>
+                                <p class="text-xs text-slate-500 mt-1 leading-relaxed">Quick to learn new processes and adjust to new tasks.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start space-x-3 bg-slate-50 border border-slate-100 rounded-2xl p-4">
+                            <div class="w-9 h-9 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center shrink-0"><i class="fa-solid fa-clock"></i></div>
+                            <div>
+                                <p class="text-sm font-bold text-slate-800">Time Management &amp; Multitasking</p>
+                                <p class="text-xs text-slate-500 mt-1 leading-relaxed">Good time management and multitasking abilities.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start space-x-3 bg-slate-50 border border-slate-100 rounded-2xl p-4 sm:col-span-2">
+                            <div class="w-9 h-9 rounded-lg bg-green-100 text-green-600 flex items-center justify-center shrink-0"><i class="fa-solid fa-list-check"></i></div>
+                            <div>
+                                <p class="text-sm font-bold text-slate-800">Organized &amp; Detail-Oriented</p>
+                                <p class="text-xs text-slate-500 mt-1 leading-relaxed">Organized and detail-oriented, with a positive and professional work attitude.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 pt-6 border-t border-slate-100 flex flex-wrap gap-2">
+                        <span class="bg-slate-100 text-slate-700 text-xs px-3 py-1.5 rounded-lg font-medium">Positive Work Attitude</span>
+                        <span class="bg-slate-100 text-slate-700 text-xs px-3 py-1.5 rounded-lg font-medium">Professionalism</span>
+                        <span class="bg-slate-100 text-slate-700 text-xs px-3 py-1.5 rounded-lg font-medium">Teamwork</span>
+                        <span class="bg-slate-100 text-slate-700 text-xs px-3 py-1.5 rounded-lg font-medium">Reliable &amp; Punctual</span>
+                        <span class="bg-slate-100 text-slate-700 text-xs px-3 py-1.5 rounded-lg font-medium">Friendly Customer Service</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Certificates & Achievements Section -->
+    <section id="certificates" class="py-20 bg-white border-t border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-xs font-bold uppercase tracking-widest text-brand-600 mb-2">Credentials & Recognition</h2>
+                <h3 class="text-3xl font-extrabold text-slate-900 sm:text-4xl">Certificates & Achievements</h3>
+                <p class="mt-4 text-slate-600">Official IT certifications, training workshops, seminars, and honors earned throughout my academic and professional journey.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <!-- Certificate 1 -->
+                <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6 flex flex-col justify-between shadow-sm hover:shadow-md transition group">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="bg-brand-100 text-brand-700 text-xs font-semibold px-3 py-1 rounded-full">IT Certification</span>
+                            <span class="text-xs text-slate-400 font-medium"><i class="fa-regular fa-calendar mr-1"></i> Oct 2025</span>
+                        </div>
+                        <h4 class="text-lg font-bold text-slate-900 group-hover:text-brand-600 transition">IT Specialist in Software Development</h4>
+                        <p class="text-xs text-slate-500 font-medium mt-1">Issuing Organization: Certiport / Pearson VUE</p>
+                        <p class="text-xs text-slate-600 mt-3 line-clamp-2">Validated proficiency in object-oriented programming principles, algorithms, and application development workflows.</p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-200 flex items-center justify-between">
+                        <button onclick="openCertModal('IT Specialist in Software Development', 'Certiport / Pearson VUE', 'October 2025', 'https://placehold.co/700x500/4f46e5/ffffff?text=IT+Specialist+Certificate', 'https://verify.certiport.com')" class="text-xs font-bold text-brand-600 hover:text-brand-700 inline-flex items-center space-x-1">
+                            <i class="fa-solid fa-eye mr-1"></i><span>View Certificate</span>
+                        </button>
+                        <a href="https://certiport.com" target="_blank" class="text-xs text-slate-500 hover:text-slate-800"><i class="fa-solid fa-external-link-alt"></i> Verify</a>
+                    </div>
+                </div>
+
+                <!-- Certificate 2 -->
+                <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6 flex flex-col justify-between shadow-sm hover:shadow-md transition group">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="bg-indigo-100 text-indigo-700 text-xs font-semibold px-3 py-1 rounded-full">Cisco Networking</span>
+                            <span class="text-xs text-slate-400 font-medium"><i class="fa-regular fa-calendar mr-1"></i> Jun 2025</span>
+                        </div>
+                        <h4 class="text-lg font-bold text-slate-900 group-hover:text-brand-600 transition">CCNAv7: Enterprise Networking, Security, and Automation</h4>
+                        <p class="text-xs text-slate-500 font-medium mt-1">Issuing Organization: Cisco Networking Academy</p>
+                        <p class="text-xs text-slate-600 mt-3 line-clamp-2">Comprehensive training in architecture, security, routing protocols, and network automation configuration.</p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-200 flex items-center justify-between">
+                        <button onclick="openCertModal('CCNAv7: Enterprise Networking', 'Cisco NetAcad', 'June 2025', 'https://placehold.co/700x500/312e81/ffffff?text=CCNAv7+Certificate', 'https://netacad.com')" class="text-xs font-bold text-brand-600 hover:text-brand-700 inline-flex items-center space-x-1">
+                            <i class="fa-solid fa-eye mr-1"></i><span>View Certificate</span>
+                        </button>
+                        <a href="https://netacad.com" target="_blank" class="text-xs text-slate-500 hover:text-slate-800"><i class="fa-solid fa-external-link-alt"></i> Verify</a>
+                    </div>
+                </div>
+
+                <!-- Certificate 3 -->
+                <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6 flex flex-col justify-between shadow-sm hover:shadow-md transition group">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="bg-purple-100 text-purple-700 text-xs font-semibold px-3 py-1 rounded-full">Government Exam</span>
+                            <span class="text-xs text-slate-400 font-medium"><i class="fa-regular fa-calendar mr-1"></i> Mar 2025</span>
+                        </div>
+                        <h4 class="text-lg font-bold text-slate-900 group-hover:text-brand-600 transition">Civil Service Professional Eligibility</h4>
+                        <p class="text-xs text-slate-500 font-medium mt-1">Issuing Organization: Civil Service Commission (CSC)</p>
+                        <p class="text-xs text-slate-600 mt-3 line-clamp-2">Official government qualification for permanent employment in public service and government IT infrastructure.</p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-200 flex items-center justify-between">
+                        <button onclick="openCertModal('Civil Service Professional Eligibility', 'CSC Philippines', 'March 2025', 'https://placehold.co/700x500/581c87/ffffff?text=Civil+Service+Eligibility', 'https://csc.gov.ph')" class="text-xs font-bold text-brand-600 hover:text-brand-700 inline-flex items-center space-x-1">
+                            <i class="fa-solid fa-eye mr-1"></i><span>View Certificate</span>
+                        </button>
+                        <a href="https://csc.gov.ph" target="_blank" class="text-xs text-slate-500 hover:text-slate-800"><i class="fa-solid fa-external-link-alt"></i> Verify</a>
+                    </div>
+                </div>
+
+                <!-- Certificate 4 -->
+                <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6 flex flex-col justify-between shadow-sm hover:shadow-md transition group">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="bg-green-100 text-green-700 text-xs font-semibold px-3 py-1 rounded-full">TESDA National Cert</span>
+                            <span class="text-xs text-slate-400 font-medium"><i class="fa-regular fa-calendar mr-1"></i> Nov 2024</span>
+                        </div>
+                        <h4 class="text-lg font-bold text-slate-900 group-hover:text-brand-600 transition">Computer Systems Servicing (NC II)</h4>
+                        <p class="text-xs text-slate-500 font-medium mt-1">Issuing Organization: TESDA</p>
+                        <p class="text-xs text-slate-600 mt-3 line-clamp-2">Hardware troubleshooting, network installation, operating system configuration, and PC maintenance.</p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-200 flex items-center justify-between">
+                        <button onclick="openCertModal('Computer Systems Servicing NC II', 'TESDA', 'November 2024', 'https://placehold.co/700x500/166534/ffffff?text=TESDA+NC+II+Certificate', 'https://tesda.gov.ph')" class="text-xs font-bold text-brand-600 hover:text-brand-700 inline-flex items-center space-x-1">
+                            <i class="fa-solid fa-eye mr-1"></i><span>View Certificate</span>
+                        </button>
+                        <a href="https://tesda.gov.ph" target="_blank" class="text-xs text-slate-500 hover:text-slate-800"><i class="fa-solid fa-external-link-alt"></i> Verify</a>
+                    </div>
+                </div>
+
+                <!-- Certificate 5 -->
+                <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6 flex flex-col justify-between shadow-sm hover:shadow-md transition group">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="bg-amber-100 text-amber-700 text-xs font-semibold px-3 py-1 rounded-full">Workshop & Training</span>
+                            <span class="text-xs text-slate-400 font-medium"><i class="fa-regular fa-calendar mr-1"></i> Aug 2024</span>
+                        </div>
+                        <h4 class="text-lg font-bold text-slate-900 group-hover:text-brand-600 transition">Full Stack Web Development Bootcamp</h4>
+                        <p class="text-xs text-slate-500 font-medium mt-1">Issuing Organization: CodeTech Academy</p>
+                        <p class="text-xs text-slate-600 mt-3 line-clamp-2">Intensive 80-hour hands-on training covering React, Node.js, Express, and PostgreSQL integration.</p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-200 flex items-center justify-between">
+                        <button onclick="openCertModal('Full Stack Web Development Bootcamp', 'CodeTech Academy', 'August 2024', 'https://placehold.co/700x500/b45309/ffffff?text=Bootcamp+Certificate', 'https://example.com')" class="text-xs font-bold text-brand-600 hover:text-brand-700 inline-flex items-center space-x-1">
+                            <i class="fa-solid fa-eye mr-1"></i><span>View Certificate</span>
+                        </button>
+                        <a href="#" class="text-xs text-slate-500 hover:text-slate-800"><i class="fa-solid fa-external-link-alt"></i> Verify</a>
+                    </div>
+                </div>
+
+                <!-- Certificate 6 -->
+                <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6 flex flex-col justify-between shadow-sm hover:shadow-md transition group">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="bg-rose-100 text-rose-700 text-xs font-semibold px-3 py-1 rounded-full">Award & Recognition</span>
+                            <span class="text-xs text-slate-400 font-medium"><i class="fa-regular fa-calendar mr-1"></i> May 2024</span>
+                        </div>
+                        <h4 class="text-lg font-bold text-slate-900 group-hover:text-brand-600 transition">Best Capstone Project System Award</h4>
+                        <p class="text-xs text-slate-500 font-medium mt-1">Issuing Organization: University IT Department</p>
+                        <p class="text-xs text-slate-600 mt-3 line-clamp-2">Awarded for developing an innovative IoT-based campus energy monitoring platform evaluated by faculty and industry leaders.</p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-200 flex items-center justify-between">
+                        <button onclick="openCertModal('Best Capstone Project Award', 'University IT Dept', 'May 2024', 'https://placehold.co/700x500/be123c/ffffff?text=Capstone+Award+Certificate', 'https://example.com')" class="text-xs font-bold text-brand-600 hover:text-brand-700 inline-flex items-center space-x-1">
+                            <i class="fa-solid fa-eye mr-1"></i><span>View Certificate</span>
+                        </button>
+                        <a href="#" class="text-xs text-slate-500 hover:text-slate-800"><i class="fa-solid fa-external-link-alt"></i> Verify</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section id="experience" class="py-20 bg-slate-50 border-t border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-xs font-bold uppercase tracking-widest text-brand-600 mb-2">Work Experience</h2>
+                <h3 class="text-3xl font-extrabold text-slate-900 sm:text-4xl">Part-Time Work Experience</h3>
+                <p class="mt-4 text-slate-600">Hands-on experience gained from my part-time job while studying.</p>
+            </div>
+
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-8 shadow-sm">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between mb-4">
+                        <div>
+                            <span class="bg-brand-50 text-brand-700 text-xs font-bold px-3 py-1 rounded-full">Part-Time</span>
+                            <h4 class="text-xl font-bold text-slate-900 mt-2">Service Crew</h4>
+                            <p class="text-sm font-medium text-slate-600 mt-0.5">Peri-Peri Charcoal Chicken &mdash; SM Cauayan</p>
+                        </div>
+                        <span class="mt-2 md:mt-0 text-xs font-bold bg-slate-100 text-slate-600 px-3 py-1.5 rounded-xl inline-block">
+                            <i class="fa-solid fa-briefcase mr-1"></i> Dishwasher / Server
+                        </span>
+                    </div>
+                    <p class="text-slate-600 text-sm leading-relaxed mb-4">
+                        Part-time service crew member at the SM Cauayan branch, supporting both the kitchen and the dining area while balancing my studies as a 3rd-year BS Information Technology student.
+                    </p>
+                    <div class="border-t border-slate-100 pt-4">
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">What I Did</p>
+                        <ul class="space-y-1.5 text-xs text-slate-600">
+                            <li class="flex items-center"><i class="fa-solid fa-check text-brand-600 mr-2"></i> Served customers courteously and efficiently, especially during peak hours.</li>
+                            <li class="flex items-center"><i class="fa-solid fa-check text-brand-600 mr-2"></i> Handled dishwashing and kept the kitchen and dining areas clean and organized.</li>
+                            <li class="flex items-center"><i class="fa-solid fa-check text-brand-600 mr-2"></i> Worked with minimal supervision while managing several tasks at once.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Contacts Section -->
+    <section id="contact" class="py-20 bg-white border-t border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-xs font-bold uppercase tracking-widest text-brand-600 mb-2">Get in Touch</h2>
+                <h3 class="text-3xl font-extrabold text-slate-900 sm:text-4xl">Let's Get in Touch</h3>
+                <p class="mt-4 text-slate-600">Have a job opportunity, a part-time role, or simply want to say hello? Send me a message below.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 max-w-6xl mx-auto">
+                
+                <!-- Contact Info Column -->
+                <div class="lg:col-span-5 space-y-6">
+                    <div class="bg-slate-50 border border-slate-200 rounded-3xl p-8 shadow-sm space-y-6">
+                        <h4 class="text-xl font-bold text-slate-900">Contact Information</h4>
+                        <p class="text-sm text-slate-600">Feel free to reach out through any of the channels below or fill out the contact form.</p>
+
+                        <div class="space-y-4 text-sm">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-10 h-10 rounded-xl bg-brand-100 text-brand-600 flex items-center justify-center"><i class="fa-solid fa-envelope"></i></div>
+                                <div>
+                                    <p class="text-xs text-slate-400 font-medium">Email Address</p>
+                                    <a href="mailto:tejadakristeljoy04@gmail.com" class="font-semibold text-slate-800 hover:text-brand-600 break-all">tejadakristeljoy04@gmail.com</a>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center space-x-4">
+                                <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center"><i class="fa-solid fa-phone"></i></div>
+                                <div>
+                                    <p class="text-xs text-slate-400 font-medium">Mobile Number</p>
+                                    <a href="tel:+639097899177" class="font-semibold text-slate-800 hover:text-brand-600">0909 789 9177</a>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center space-x-4">
+                                <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center"><i class="fa-solid fa-location-dot"></i></div>
+                                <div>
+                                    <p class="text-xs text-slate-400 font-medium">Home Address</p>
+                                    <span class="font-semibold text-slate-800">Purok 11B, Villa Luna, Cauayan City, Isabela</span>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center space-x-4">
+                                <div class="w-10 h-10 rounded-xl bg-green-100 text-green-600 flex items-center justify-center"><i class="fa-solid fa-graduation-cap"></i></div>
+                                <div>
+                                    <p class="text-xs text-slate-400 font-medium">Currently Studying</p>
+                                    <span class="font-semibold text-slate-800">BS Information Technology — Isabela State University</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Form Column -->
+                <div class="lg:col-span-7">
+                    <div class="bg-slate-50 border border-slate-200 rounded-3xl p-8 shadow-sm">
+                        <h4 class="text-xl font-bold text-slate-900 mb-6">Send Me a Message</h4>
+                        
+                        <form id="contact-form" onsubmit="handleContactSubmit(event)" class="space-y-4">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Your Name</label>
+                                    <input type="text" id="form-name" required placeholder="John Doe" class="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-600 transition">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Your Email</label>
+                                    <input type="email" id="form-email" required placeholder="john@example.com" class="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-600 transition">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Subject</label>
+                                <input type="text" id="form-subject" required placeholder="Job Opportunity / Project Inquiry" class="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-600 transition">
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Message</label>
+                                <textarea id="form-message" rows="4" required placeholder="Hello Kristel, we have a customer service / IT position opening that may suit you..." class="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-600 transition"></textarea>
+                            </div>
+
+                            <button type="submit" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-brand-600/20 transition transform active:scale-95">
+                                Send Message <i class="fa-solid fa-paper-plane ml-2"></i>
+                            </button>
+                        </form>
+
+                        <!-- Success Validation Box (Hidden by default) -->
+                        <div id="form-success" class="hidden mt-4 p-4 bg-green-50 border border-green-200 rounded-xl text-green-800 text-sm flex items-center space-x-3">
+                            <i class="fa-solid fa-circle-check text-green-600 text-lg"></i>
+                            <div>
+                                <p class="font-bold">Message Sent Successfully!</p>
+                                <p class="text-xs text-green-700">Thank you for reaching out. Kristel will get back to you as soon as possible.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer with Domain Branding Badge -->
+    <footer class="bg-slate-900 text-white py-12 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6 pb-8 border-b border-slate-800">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-400 flex items-center justify-center text-white font-bold text-lg shadow-md">
+                        KT
+                    </div>
+                    <div>
+                        <p class="font-bold text-lg">Kristel Joy V. Tejada</p>
+                        <p class="text-xs text-slate-400">BSIT Student · Personal Resume Portfolio</p>
+                    </div>
+                </div>
+
+                <!-- Availability Badge -->
+                <div class="bg-slate-800 border border-slate-700 px-5 py-2.5 rounded-2xl flex items-center space-x-3 shadow-inner">
+                    <div class="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse"></div>
+                    <div>
+                        <p class="text-[10px] text-slate-400 uppercase tracking-widest font-semibold">Available for Work</p>
+                        <p class="text-sm font-bold text-brand-400 font-mono">tejadakristeljoy04@gmail.com</p>
+                    </div>
+                </div>
+
+                <div class="flex space-x-4">
+                    <a href="https://linkedin.com" target="_blank" class="w-10 h-10 rounded-xl bg-slate-800 hover:bg-brand-600 flex items-center justify-center text-slate-300 hover:text-white transition"><i class="fa-brands fa-linkedin-in"></i></a>
+                    <a href="tel:+639097899177" class="w-10 h-10 rounded-xl bg-slate-800 hover:bg-brand-600 flex items-center justify-center text-slate-300 hover:text-white transition"><i class="fa-solid fa-phone"></i></a>
+                    <a href="mailto:tejadakristeljoy04@gmail.com" class="w-10 h-10 rounded-xl bg-slate-800 hover:bg-brand-600 flex items-center justify-center text-slate-300 hover:text-white transition"><i class="fa-solid fa-envelope"></i></a>
+                </div>
+            </div>
+
+            <div class="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400">
+                <p>&copy; 2026 Kristel Joy V. Tejada. All rights reserved. Built with Tailwind CSS &amp; HTML5.</p>
+                <p class="mt-2 sm:mt-0">Personal Resume Portfolio Project Requirement</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Certificate Preview Modal -->
+    <div id="cert-modal" class="fixed inset-0 z-50 hidden bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 relative shadow-2xl animate-in fade-in zoom-in duration-200">
+            <button onclick="closeCertModal()" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-700 transition">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            <div class="mb-4">
+                <span class="text-xs font-bold bg-brand-50 text-brand-700 px-3 py-1 rounded-full" id="cert-modal-issuer">Issuing Organization</span>
+                <h3 class="text-2xl font-bold text-slate-900 mt-2" id="cert-modal-title">Certificate Title</h3>
+                <p class="text-xs text-slate-500 mt-1" id="cert-modal-date">Date Earned</p>
+            </div>
+            <div class="rounded-2xl overflow-hidden border border-slate-200 bg-slate-100 mb-6 h-64 sm:h-80 flex items-center justify-center">
+                <img id="cert-modal-img" src="" alt="Certificate Preview" class="w-full h-full object-cover">
+            </div>
+            <div class="flex items-center justify-between">
+                <a id="cert-modal-verify" href="#" target="_blank" class="inline-flex items-center space-x-2 bg-brand-600 hover:bg-brand-700 text-white font-semibold px-5 py-2.5 rounded-xl text-sm transition">
+                    <i class="fa-solid fa-shield-check"></i><span>Online Verification Link</span>
+                </a>
+                <button onclick="closeCertModal()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold px-5 py-2.5 rounded-xl text-sm transition">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Project Details & Screenshots Modal -->
+    <div id="project-modal" class="fixed inset-0 z-50 hidden bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-3xl w-full p-6 sm:p-8 relative shadow-2xl my-8">
+            <button onclick="closeProjectModal()" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-700 transition">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+
+            <div class="mb-6">
+                <span class="text-xs font-bold bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full" id="proj-modal-role">Role</span>
+                <h3 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-2" id="proj-modal-title">Project Title</h3>
+            </div>
+
+            <div class="space-y-6 text-sm text-slate-600 max-h-[70vh] overflow-y-auto pr-2">
+                <div>
+                    <h5 class="font-bold text-slate-900 mb-1"><i class="fa-solid fa-bullseye text-brand-600 mr-2"></i> Purpose of the System</h5>
+                    <p id="proj-modal-purpose" class="leading-relaxed"></p>
+                </div>
+
+                <div>
+                    <h5 class="font-bold text-slate-900 mb-1"><i class="fa-solid fa-microchip text-brand-600 mr-2"></i> Technologies Used</h5>
+                    <p id="proj-modal-tech" class="font-mono text-xs bg-slate-100 p-3 rounded-xl border border-slate-200 text-slate-800"></p>
+                </div>
+
+                <div>
+                    <h5 class="font-bold text-slate-900 mb-1"><i class="fa-solid fa-star text-brand-600 mr-2"></i> Key Features</h5>
+                    <p id="proj-modal-features" class="leading-relaxed"></p>
+                </div>
+
+                <div>
+                    <h5 class="font-bold text-slate-900 mb-1"><i class="fa-solid fa-user-gear text-brand-600 mr-2"></i> Contributions Made</h5>
+                    <p id="proj-modal-contributions" class="leading-relaxed"></p>
+                </div>
+
+                <div>
+                    <h5 class="font-bold text-slate-900 mb-3"><i class="fa-solid fa-images text-brand-600 mr-2"></i> Project Screenshots</h5>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="rounded-xl overflow-hidden border border-slate-200 bg-slate-100 h-48">
+                            <img id="proj-modal-img1" src="" alt="Screenshot 1" class="w-full h-full object-cover">
+                        </div>
+                        <div class="rounded-xl overflow-hidden border border-slate-200 bg-slate-100 h-48">
+                            <img id="proj-modal-img2" src="" alt="Screenshot 2" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 pt-4 border-t border-slate-200 flex justify-end">
+                <button onclick="closeProjectModal()" class="bg-slate-900 hover:bg-slate-800 text-white font-semibold px-6 py-2.5 rounded-xl text-sm transition">Close Details</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Media Upload Manager Modal -->
+    <div id="media-modal" class="fixed inset-0 z-50 hidden bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-3xl w-full p-6 sm:p-8 relative shadow-2xl my-8 max-h-[92vh] overflow-y-auto">
+            <button onclick="closeMediaModal()" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-700 transition">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+
+            <div class="mb-6 pr-10">
+                <span class="text-xs font-bold bg-brand-50 text-brand-700 px-3 py-1 rounded-full">Media Manager</span>
+                <h3 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-2">Upload Photos, Certificates & Resume</h3>
+                <p class="text-sm text-slate-600 mt-2">Pick files from your device. They replace the placeholders across the portfolio instantly.</p>
+            </div>
+
+            <div id="media-error" class="hidden mb-4 p-3 bg-rose-50 border border-rose-200 rounded-xl text-rose-700 text-xs font-semibold"></div>
+
+            <!-- Resume -->
+            <div class="mb-7">
+                <h5 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3"><i class="fa-solid fa-file-pdf text-rose-500 mr-2"></i>Resume / CV (PDF) — Used by every Download button</h5>
+                <div class="flex flex-wrap items-center justify-between gap-4 p-4 bg-slate-50 border border-slate-200 rounded-2xl">
+                    <div class="flex items-center space-x-3 min-w-0">
+                        <div class="w-12 h-12 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center text-xl shrink-0"><i class="fa-solid fa-file-lines"></i></div>
+                        <div class="min-w-0">
+                            <p class="text-sm font-bold text-slate-800">Resume PDF</p>
+                            <p id="label-resume" class="text-xs text-slate-500 truncate">No file uploaded yet</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2 shrink-0">
+                        <label class="cursor-pointer bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition">Choose PDF<input type="file" accept=".pdf,application/pdf" class="hidden" onchange="handleMedia(this,'resume')"></label>
+                        <button onclick="clearMedia('resume')" class="text-xs font-bold text-slate-400 hover:text-rose-600 px-3 py-2.5">Remove</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Photo -->
+            <div class="mb-7">
+                <h5 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3"><i class="fa-solid fa-user text-brand-600 mr-2"></i>Profile Photo</h5>
+                <div class="flex flex-wrap items-center justify-between gap-4 p-4 bg-slate-50 border border-slate-200 rounded-2xl">
+                    <div class="flex items-center space-x-3 min-w-0">
+                        <img id="thumb-photo" alt="" class="w-12 h-12 rounded-xl object-cover bg-slate-200 border border-slate-200 shrink-0">
+                        <div class="min-w-0">
+                            <p class="text-sm font-bold text-slate-800">Hero Portrait</p>
+                            <p id="label-photo" class="text-xs text-slate-500 truncate">Using default placeholder</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2 shrink-0">
+                        <label class="cursor-pointer bg-white border border-slate-300 hover:border-brand-500 text-slate-700 text-xs font-bold px-4 py-2.5 rounded-xl transition">Choose Image<input type="file" accept="image/*" class="hidden" onchange="handleMedia(this,'photo')"></label>
+                        <button onclick="clearMedia('photo')" class="text-xs font-bold text-slate-400 hover:text-rose-600 px-3 py-2.5">Remove</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Certificate Images -->
+            <div class="mb-7">
+                <h5 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3"><i class="fa-solid fa-certificate text-amber-500 mr-2"></i>Certificate Images (shown in the preview modal)</h5>
+                <div id="media-certs" class="space-y-3"></div>
+            </div>
+
+            <div class="pt-5 border-t border-slate-200 flex flex-wrap items-center justify-between gap-3">
+                <p class="text-xs text-slate-500 max-w-md leading-relaxed">Uploads are saved in <span class="font-semibold text-slate-700">this browser only</span>. Send me the files if you want them permanently embedded in the HTML.</p>
+                <div class="flex space-x-3">
+                    <button onclick="resetMedia()" class="text-xs font-bold text-slate-500 hover:text-rose-600 px-4 py-2.5">Reset All</button>
+                    <button onclick="closeMediaModal()" class="bg-slate-900 hover:bg-slate-800 text-white font-semibold px-6 py-2.5 rounded-xl text-sm transition">Done</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Code -->
+    <script>
+        // Mobile Menu Toggle
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Close mobile menu when clicking a link
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // Toast Notification
+        function showToast(message, icon = 'fa-file-arrow-down') {
+            const notif = document.createElement('div');
+            notif.className = 'fixed bottom-5 right-5 z-[60] bg-slate-900 text-white px-6 py-3 rounded-2xl shadow-2xl flex items-center space-x-3';
+            notif.innerHTML = '<i class="fa-solid ' + icon + ' text-brand-400 text-lg"></i><span>' + message + '</span>';
+            document.body.appendChild(notif);
+            setTimeout(() => {
+                notif.remove();
+            }, 3500);
+        }
+
+        // Download Resume (uses the uploaded PDF when one exists)
+        function downloadResume() {
+            if (media.resume && media.resume.dataUrl) {
+                const a = document.createElement('a');
+                a.href = media.resume.dataUrl;
+                a.download = media.resume.name || 'Resume.pdf';
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                showToast('Downloading ' + (media.resume.name || 'Resume.pdf'), 'fa-file-arrow-down');
+                return;
+            }
+            showToast('No resume uploaded yet — open Uploads to add your PDF.', 'fa-circle-exclamation');
+        }
+
+        // Experience Tabs Switching
+        function switchExpTab(tabName) {
+            const tabs = ['work', 'internship', 'volunteer'];
+            tabs.forEach(t => {
+                const content = document.getElementById(`tab-${t}`);
+                const btn = document.getElementById(`btn-${t}`);
+                if (t === tabName) {
+                    content.classList.remove('hidden');
+                    btn.className = 'px-6 py-2.5 rounded-xl text-sm font-semibold transition bg-brand-600 text-white shadow-sm';
+                } else {
+                    content.classList.add('hidden');
+                    btn.className = 'px-6 py-2.5 rounded-xl text-sm font-semibold transition text-slate-600 hover:text-slate-900';
+                }
+            });
+        }
+
+        // Project Filtering
+        function filterProjects(category) {
+            const buttons = ['all', 'capstone', 'web', 'mobile', 'academic'];
+            buttons.forEach(b => {
+                const btn = document.getElementById(`filter-${b}`);
+                if (b === category) {
+                    btn.className = 'px-5 py-2 rounded-xl text-xs font-bold transition bg-brand-600 text-white shadow-sm';
+                } else {
+                    btn.className = 'px-5 py-2 rounded-xl text-xs font-bold transition bg-slate-100 text-slate-600 hover:bg-slate-200';
+                }
+            });
+
+            const cards = document.querySelectorAll('.project-card');
+            cards.forEach(card => {
+                const cat = card.getAttribute('data-category');
+                if (category === 'all' || cat === category) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Certificate Modal Functions
+        function openCertModal(title, issuer, date, imgUrl, verifyUrl) {
+            document.getElementById('cert-modal-title').innerText = title;
+            document.getElementById('cert-modal-issuer').innerText = issuer;
+            document.getElementById('cert-modal-date').innerText = 'Earned: ' + date;
+            document.getElementById('cert-modal-img').src = media.certs[title] || imgUrl;
+            document.getElementById('cert-modal-verify').href = verifyUrl;
+            document.getElementById('cert-modal').classList.remove('hidden');
+        }
+
+        function closeCertModal() {
+            document.getElementById('cert-modal').classList.add('hidden');
+        }
+
+        // Project Modal Functions
+        function openProjectModal(title, role, purpose, tech, features, contributions, img1, img2) {
+            const key = PROJECT_KEY_BY_TITLE[title];
+            const shots = (key && media.projects[key]) || [];
+            document.getElementById('proj-modal-title').innerText = title;
+            document.getElementById('proj-modal-role').innerText = 'Role: ' + role;
+            document.getElementById('proj-modal-purpose').innerText = purpose;
+            document.getElementById('proj-modal-tech').innerText = tech;
+            document.getElementById('proj-modal-features').innerText = features;
+            document.getElementById('proj-modal-contributions').innerText = contributions;
+            document.getElementById('proj-modal-img1').src = shots[0] || img1;
+            document.getElementById('proj-modal-img2').src = shots[1] || img2;
+            document.getElementById('project-modal').classList.remove('hidden');
+        }
+
+        function closeProjectModal() {
+            document.getElementById('project-modal').classList.add('hidden');
+        }
+
+        // ===== Media Manager (photo, certificates, resume, project shots) =====
+        const MEDIA_KEY = 'portfolio-media-v1';
+
+        const CERT_ITEMS = [
+            { key: 'IT Specialist in Software Development', label: 'IT Specialist in Software Development', img: 'https://placehold.co/700x500/4f46e5/ffffff?text=IT+Specialist+Certificate' },
+            { key: 'CCNAv7: Enterprise Networking', label: 'CCNAv7: Enterprise Networking', img: 'https://placehold.co/700x500/312e81/ffffff?text=CCNAv7+Certificate' },
+            { key: 'Civil Service Professional Eligibility', label: 'Civil Service Professional Eligibility', img: 'https://placehold.co/700x500/581c87/ffffff?text=Civil+Service+Eligibility' },
+            { key: 'Computer Systems Servicing NC II', label: 'Computer Systems Servicing (NC II)', img: 'https://placehold.co/700x500/166534/ffffff?text=TESDA+NC+II+Certificate' },
+            { key: 'Full Stack Web Development Bootcamp', label: 'Full Stack Web Development Bootcamp', img: 'https://placehold.co/700x500/b45309/ffffff?text=Bootcamp+Certificate' },
+            { key: 'Best Capstone Project Award', label: 'Best Capstone Project System Award', img: 'https://placehold.co/700x500/be123c/ffffff?text=Capstone+Award+Certificate' }
+        ];
+
+        const PROJECT_ITEMS = [
+            { key: 'capstone', label: 'Smart Campus IoT Energy Monitor' },
+            { key: 'web', label: 'ShopEase E-Commerce Web App' },
+            { key: 'mobile', label: 'CampusNav Mobile App' },
+            { key: 'academic', label: 'University Enrollment System' }
+        ];
+
+        const PROJECT_KEY_BY_TITLE = {
+            'Smart Campus IoT Energy Monitor': 'capstone',
+            'ShopEase E-Commerce Web App': 'web',
+            'CampusNav Mobile App': 'mobile',
+            'University Enrollment System': 'academic'
+        };
+
+        let media = { resume: null, photo: null, certs: {}, projects: {} };
+        let mediaSnapshot = null;
+        let mediaDefaults = { photo: '', covers: {} };
+
+        function loadMedia() {
+            try {
+                const raw = localStorage.getItem(MEDIA_KEY);
+                if (raw) media = Object.assign(media, JSON.parse(raw));
+            } catch (e) { /* storage unavailable */ }
+            mediaSnapshot = JSON.stringify(media);
+        }
+
+        function saveMedia() {
+            try {
+                localStorage.setItem(MEDIA_KEY, JSON.stringify(media));
+                mediaSnapshot = JSON.stringify(media);
+                showMediaError('');
+                return true;
+            } catch (e) {
+                try { media = JSON.parse(mediaSnapshot); } catch (err) { }
+                showMediaError('Browser storage is full. Remove some uploads or use smaller images (resume must be under ~4 MB).');
+                return false;
+            }
+        }
+
+        function showMediaError(msg) {
+            const box = document.getElementById('media-error');
+            box.innerText = msg;
+            box.classList.toggle('hidden', !msg);
+        }
+
+        function readFile(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function processImage(file, maxDim, quality) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onerror = reject;
+                reader.onload = () => {
+                    const img = new Image();
+                    img.onerror = reject;
+                    img.onload = () => {
+                        let w = img.naturalWidth, h = img.naturalHeight;
+                        const scale = Math.min(1, maxDim / Math.max(w, h));
+                        w = Math.max(1, Math.round(w * scale));
+                        h = Math.max(1, Math.round(h * scale));
+                        const canvas = document.createElement('canvas');
+                        canvas.width = w; canvas.height = h;
+                        const ctx = canvas.getContext('2d');
+                        ctx.fillStyle = '#ffffff';
+                        ctx.fillRect(0, 0, w, h);
+                        ctx.drawImage(img, 0, 0, w, h);
+                        resolve(canvas.toDataURL('image/jpeg', quality));
+                    };
+                    img.src = reader.result;
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        async function handleMedia(input, type, key) {
+            const files = Array.from(input.files || []);
+            if (!files.length) return;
+            try {
+                if (type === 'resume') {
+                    const f = files[0];
+                    if (f.size > 4.5 * 1024 * 1024) {
+                        showMediaError('Resume is too large for browser storage (' + (f.size / 1048576).toFixed(1) + ' MB). Maximum is about 4.5 MB.');
+                        input.value = '';
+                        return;
+                    }
+                    media.resume = { name: f.name, size: f.size, dataUrl: await readFile(f) };
+                } else if (type === 'photo') {
+                    media.photo = await processImage(files[0], 1200, 0.85);
+                } else if (type === 'cert') {
+                    media.certs[key] = await processImage(files[0], 1600, 0.8);
+                } else if (type === 'project') {
+                    media.projects[key] = await Promise.all(files.slice(0, 2).map(f => processImage(f, 1280, 0.78)));
+                }
+                saveMedia();
+                applyMedia();
+                showToast('Upload saved', 'fa-circle-check');
+            } catch (e) {
+                showMediaError('Could not read that file. Please choose a valid image or PDF.');
+            }
+            input.value = '';
+        }
+
+        function clearMedia(type, key) {
+            if (type === 'resume') media.resume = null;
+            else if (type === 'photo') media.photo = null;
+            else if (type === 'cert') delete media.certs[key];
+            else if (type === 'project') delete media.projects[key];
+            saveMedia();
+            applyMedia();
+        }
+
+        function resetMedia() {
+            media = { resume: null, photo: null, certs: {}, projects: {} };
+            saveMedia();
+            applyMedia();
+            showToast('All uploads removed', 'fa-eraser');
+        }
+
+        function formatSize(bytes) {
+            if (!bytes) return '';
+            return bytes > 1048576 ? (bytes / 1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(bytes / 1024)) + ' KB';
+        }
+
+        function mediaRow(id, title, sub, thumb, accept, multiple, type, key) {
+            return '<div class="flex flex-wrap items-center justify-between gap-3 p-3.5 bg-slate-50 border border-slate-200 rounded-2xl">' +
+                '<div class="flex items-center space-x-3 min-w-0 flex-1">' + thumb +
+                '<div class="min-w-0"><p class="text-sm font-bold text-slate-800 truncate">' + title + '</p>' +
+                '<p id="' + id + '" class="text-xs text-slate-500 truncate">' + sub + '</p></div></div>' +
+                '<div class="flex items-center space-x-2 shrink-0">' +
+                '<label class="cursor-pointer bg-white border border-slate-300 hover:border-brand-500 text-slate-700 text-xs font-bold px-3.5 py-2 rounded-lg transition">Choose<input type="file" accept="' + accept + '"' + (multiple ? ' multiple' : '') + ' class="hidden" onchange="handleMedia(this,\'' + type + '\'' + (key ? ',\'' + key + '\'' : '') + ')"></label>' +
+                '<button onclick="clearMedia(\'' + type + '\'' + (key ? ',\'' + key + '\'' : '') + ')" class="text-xs font-bold text-slate-400 hover:text-rose-600 px-2.5 py-2">Remove</button>' +
+                '</div></div>';
+        }
+
+        function renderMediaRows() {
+            document.getElementById('media-certs').innerHTML = CERT_ITEMS.map((c, i) =>
+                mediaRow('label-cert-' + i, c.label, 'Placeholder in use', '<img id="thumb-cert-' + i + '" alt="" class="w-12 h-12 rounded-lg object-cover bg-slate-200 border border-slate-200 shrink-0">', 'image/*', false, 'cert', c.key)
+            ).join('');
+        }
+
+        function applyMedia() {
+            const hero = document.getElementById('hero-photo');
+            if (hero) hero.src = media.photo || mediaDefaults.photo;
+
+            PROJECT_ITEMS.forEach(p => {
+                const cover = document.getElementById('cover-' + p.key);
+                const shot = (media.projects[p.key] || [])[0];
+                if (cover) cover.src = shot || cover.dataset.default;
+            });
+            refreshMediaUI();
+        }
+
+        function refreshMediaUI() {
+            const rLabel = document.getElementById('label-resume');
+            rLabel.innerText = media.resume
+                ? media.resume.name + ' · ' + formatSize(media.resume.size) + ' · ready to download'
+                : 'No file uploaded yet';
+
+            const pLabel = document.getElementById('label-photo');
+            pLabel.innerText = media.photo ? 'Custom photo in use' : 'Using default placeholder';
+            document.getElementById('thumb-photo').src = media.photo || mediaDefaults.photo;
+
+            CERT_ITEMS.forEach((c, i) => {
+                const thumb = document.getElementById('thumb-cert-' + i);
+                const label = document.getElementById('label-cert-' + i);
+                if (!thumb || !label) return;
+                thumb.src = media.certs[c.key] || c.img;
+                label.innerText = media.certs[c.key] ? 'Custom image in use' : 'Placeholder in use';
+            });
+
+            PROJECT_ITEMS.forEach((p, i) => {
+                const thumb = document.getElementById('thumb-proj-' + i);
+                const label = document.getElementById('label-proj-' + i);
+                if (!thumb || !label) return;
+                const shots = media.projects[p.key] || [];
+                thumb.src = shots[0] || (mediaDefaults.covers[p.key] || '');
+                label.innerText = shots.length ? shots.length + ' screenshot(s) in use' : 'Placeholder in use';
+            });
+        }
+
+        function openMediaModal() {
+            renderMediaRows();
+            refreshMediaUI();
+            showMediaError('');
+            document.getElementById('media-modal').classList.remove('hidden');
+            const mm = document.getElementById('mobile-menu');
+            if (mm) mm.classList.add('hidden');
+        }
+
+        function closeMediaModal() {
+            document.getElementById('media-modal').classList.add('hidden');
+        }
+
+        // Capture defaults and restore saved uploads
+        (function initMedia() {
+            const hero = document.getElementById('hero-photo');
+            if (hero) mediaDefaults.photo = hero.src;
+            PROJECT_ITEMS.forEach(p => {
+                const cover = document.getElementById('cover-' + p.key);
+                if (cover) {
+                    mediaDefaults.covers[p.key] = cover.src;
+                    cover.dataset.default = cover.src;
+                }
+            });
+            loadMedia();
+            applyMedia();
+        })();
+
+        // Contact Form Submission Handler
+        function handleContactSubmit(event) {
+            event.preventDefault();
+            const name = document.getElementById('form-name').value;
+            const email = document.getElementById('form-email').value;
+            const subject = document.getElementById('form-subject').value;
+            const message = document.getElementById('form-message').value;
+
+            if (name && email && subject && message) {
+                document.getElementById('contact-form').reset();
+                document.getElementById('form-success').classList.remove('hidden');
+                setTimeout(() => {
+                    document.getElementById('form-success').classList.add('hidden');
+                }, 6000);
+            }
+        }
+
+        // Close Modals on Outside Click
+        window.onclick = function(event) {
+            const certModal = document.getElementById('cert-modal');
+            const projModal = document.getElementById('project-modal');
+            const mediaModal = document.getElementById('media-modal');
+            if (event.target === certModal) {
+                closeCertModal();
+            }
+            if (event.target === projModal) {
+                closeProjectModal();
+            }
+            if (event.target === mediaModal) {
+                closeMediaModal();
+            }
+        }
+    </script>
+</body>
+</html>
