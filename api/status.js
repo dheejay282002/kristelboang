@@ -1,13 +1,15 @@
 // Vercel Serverless Function — polled by index.html every 5 seconds.
-//   GET /api/status              -> auto-check (defaults to the portfolio's own reference)
-//   GET /api/status?ref=txn_...  -> checks any PayContract reference number
-//   GET /api/status?email=a@b.c  -> checks every payment registered to that email
+//   GET /api/status                 -> auto-check (defaults to the portfolio's own reference)
+//   GET /api/status?ref=txn_...     -> checks any PayContract reference number
+//   GET /api/status?grant=payload.s -> verifies a signed grant (issued after
+//                                      Google sign-in + payment verification)
 // Returns { unlocked, status, ref, payUrl }. The page unlocks for EVERYONE
 // as soon as the payment behind the default reference is PAID, or for one
-// visitor when the email they type matches a paid transaction.
+// visitor via a grant/their own reference number.
 //
-// The lookup goes to PayContract's public endpoint:
+// The lookup goes to PayContract's public endpoints:
 //   https://timetosignandpay.vercel.app/api/public/status
+//   https://timetosignandpay.vercel.app/api/public/verify-grant
 //
 // MANUAL OVERRIDES (used if the lookup below fails):
 //   Option A (no code): Vercel dashboard -> Settings -> Environment Variables
@@ -18,7 +20,8 @@ const DEFAULT_REF = 'txn_edec5404a48bec95';
 const PAY_BASE    = process.env.PAY_BASE || 'https://timetosignandpay.vercel.app';
 const PAYMENT_STATUS_URL = process.env.PAY_STATUS_URL
   || 'https://timetosignandpay.vercel.app/api/public/status';
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const VERIFY_GRANT_URL = process.env.VERIFY_GRANT_URL
+  || 'https://timetosignandpay.vercel.app/api/public/verify-grant';
 
 function pickParam(req, key) {
   const q = req.query && req.query[key];
@@ -39,8 +42,7 @@ function normalizeRef(value) {
   return v;
 }
 
-async function lookup(query) {
-  const url = `${PAYMENT_STATUS_URL}?${query}`;
+async function lookup(url) {
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 6000);
   try {
@@ -57,6 +59,7 @@ async function lookup(query) {
       access: typeof d.access === 'string' ? d.access : 'auto',
       portfolio: d.portfolio === true,
       ref: typeof d.ref === 'string' ? d.ref : null,
+      granted: d.granted === true,
     };
   } catch (e) {
     return null;
@@ -69,11 +72,10 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Cache-Control', 'no-store');
 
-  const emailRaw = pickParam(req, 'email').trim();
-  const email = EMAIL_RE.test(emailRaw) ? emailRaw : '';
+  const grant = pickParam(req, 'grant').trim();
   const ref = normalizeRef(pickParam(req, 'ref'));
-  const query = email
-    ? 'email=' + encodeURIComponent(email)
+  const query = grant
+    ? null
     : 'ref=' + encodeURIComponent(ref);
 
   const envUnlock = process.env.PORTFOLIO_UNLOCKED === 'true';
@@ -86,12 +88,16 @@ export default async function handler(req, res) {
     });
   }
 
-  const d = await lookup(query);
+  const url = grant
+    ? `${VERIFY_GRANT_URL}?grant=${encodeURIComponent(grant)}`
+    : `${PAYMENT_STATUS_URL}?${query}`;
+  const d = await lookup(url);
+
   if (d === null) {
     // payment service unreachable -> stay locked (safe default)
     return res.status(200).json({
       unlocked: false, status: 'ERROR', paid: false, expired: false,
-      expiresAt: null, access: 'auto', ref,
+      expiresAt: null, access: 'auto', ref, granted: false,
       payUrl: `${PAY_BASE}/pay/${encodeURIComponent(ref)}`,
     });
   }

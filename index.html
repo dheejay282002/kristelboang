@@ -737,7 +737,7 @@
             <span class="text-[11px] font-bold bg-amber-100 text-amber-700 px-3 py-1 rounded-full uppercase tracking-wider">Payment Required</span>
             <h3 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-3">This Portfolio Is Locked</h3>
             <p class="text-sm text-slate-600 mt-3 leading-relaxed">
-                The full portfolio is blurred until the payment is completed. Enter the email address you used for the payment below to unlock it or open your payment page.
+                The full portfolio is blurred until the payment is completed. Enter the email address you paid with — you'll sign in to PayContract and, once your payment is verified, come straight back here unlocked.
             </p>
 
             <label for="paywall-email" class="block text-left text-[11px] font-bold text-slate-500 uppercase tracking-wider mt-6 mb-2">Email address used for payment</label>
@@ -746,7 +746,7 @@
 
             <button id="paywall-continue" type="button"
                 class="mt-3 w-full inline-flex items-center justify-center space-x-2 bg-brand-600 hover:bg-brand-700 disabled:opacity-60 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-brand-600/20 transition transform active:scale-95">
-                <span>Continue to Payment</span>
+                <span>Sign in to Unlock</span>
                 <i class="fa-solid fa-arrow-right"></i>
             </button>
 
@@ -763,10 +763,11 @@
     <!-- JavaScript Code -->
     <script>
         // ===== PAYWALL SETTINGS =====
-        const PAY_BASE     = 'https://timetosignandpay.vercel.app';   // PayContract app
-        const STATUS_URL   = 'api/status';              // api/status?email=... -> { unlocked, status }
-        const POLL_MS      = 5000;                      // how often to re-check
-        const EMAIL_RE     = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const PAY_BASE    = 'https://timetosignandpay.vercel.app';   // PayContract app
+        const GRANT_URL   = PAY_BASE + '/api/portfolio/grant';  // sign in + payment check
+        const STATUS_URL  = 'api/status';              // api/status?grant=|?ref= -> { unlocked, status }
+        const POLL_MS     = 5000;                      // how often to re-check
+        const EMAIL_RE    = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
         (function paywall() {
             const box = document.getElementById('paywall');
@@ -775,17 +776,15 @@
             const errBox = document.getElementById('paywall-error');
             const statusText = document.getElementById('paywall-status-text');
 
-            let email = '';   // email the buyer typed (registered in PayContract)
-            let ref = '';     // resolved reference of their transaction
+            let grant = '';    // signed grant issued by PayContract after login + payment check
+            let ref = '';      // resolved reference (renewal / waiting-for-payment flow)
             let pollTimer = null;   // fast poll while locked
             let guardTimer = null;  // slow poll while open (picks up admin re-lock)
             let paying = false;     // buyer has the payment page open
             let uiState = '';       // last state rendered, avoids flicker
             try {
-                const savedEmail = localStorage.getItem('portfolio-email');
-                const savedRef = localStorage.getItem('portfolio-ref');
-                if (savedEmail) { email = savedEmail; emailInput.value = savedEmail; }
-                if (savedRef) ref = savedRef;
+                grant = localStorage.getItem('portfolio-grant') || '';
+                ref = localStorage.getItem('portfolio-ref') || '';
             } catch (e) { }
 
             const isOpen = () => {
@@ -793,7 +792,8 @@
             };
             const remember = () => { try { localStorage.setItem('portfolio-unlocked', '1'); } catch (e) { } };
             const forget = () => { try { localStorage.removeItem('portfolio-unlocked'); } catch (e) { } };
-            const rememberEmail = (v) => { try { localStorage.setItem('portfolio-email', v); } catch (e) { } };
+            const rememberGrant = (g) => { try { localStorage.setItem('portfolio-grant', g); } catch (e) { } };
+            const forgetGrant = () => { try { localStorage.removeItem('portfolio-grant'); } catch (e) { } };
             const rememberRef = (v) => { try { localStorage.setItem('portfolio-ref', v); } catch (e) { } };
 
             function fmtDate(iso) {
@@ -826,17 +826,17 @@
                 if (!guardTimer) guardTimer = setInterval(guard, 15000);
             }
 
-            // Server says access is off again (admin lock / expiry) — close it
-            function relock() {
+            // Server says access is off again (admin lock / expiry / expired grant)
+            function relock(msg, keepEnabled) {
                 stopGuard();
                 forget();
                 box.classList.remove('hidden');
                 document.body.style.overflow = 'hidden';
                 uiState = '';
                 paying = false;
-                showNotice('Access to this portfolio has been disabled by the administrator.', 'red');
-                statusText.innerText = 'Access disabled by the administrator.';
-                contBtn.disabled = true;
+                showNotice(msg || 'Access to this portfolio has been disabled by the administrator.', 'red');
+                statusText.innerText = 'Waiting for payment confirmation…';
+                contBtn.disabled = !keepEnabled;
                 startPolling();
             }
 
@@ -844,18 +844,27 @@
                 return PAY_BASE + '/pay/' + encodeURIComponent(r);
             }
 
-            // ref (resolved) wins, then email, then no param = auto default check
+            // grant (signed, after login) wins, then ref, then default auto-check
             async function ask() {
                 let qs = '';
-                if (ref) qs = '?ref=' + encodeURIComponent(ref);
-                else if (email) qs = '?email=' + encodeURIComponent(email);
+                if (grant) qs = '?grant=' + encodeURIComponent(grant);
+                else if (ref) qs = '?ref=' + encodeURIComponent(ref);
                 const res = await fetch(STATUS_URL + qs, { cache: 'no-store' });
                 if (!res.ok) return null;
                 return res.json();
             }
 
-            // Locked-screen state: unpaid / expired / admin-disabled / unknown email
+            // Locked-screen state: unpaid / expired / admin-disabled / bad grant
             function renderLockedState(d) {
+                if (d.status === 'GRANT_INVALID') {
+                    if (uiState === 'grantinvalid') return;
+                    uiState = 'grantinvalid';
+                    forgetGrant(); grant = '';
+                    showError('Your sign-in session has expired. Sign in again to verify your access.');
+                    statusText.innerText = 'Waiting for payment confirmation…';
+                    contBtn.disabled = false;
+                    return;
+                }
                 if (d.status === 'ADMIN_LOCKED') {
                     if (uiState === 'admin') return;
                     uiState = 'admin';
@@ -875,16 +884,51 @@
                     return;
                 }
                 if (d.status === 'NOT_FOUND') {
-                    if (uiState === 'notfound') return;
+                    // Auto-check before the visitor acted — stay quiet; the
+                    // account/redirect messages (nfound, wrongacct) must survive.
+                    if (uiState === 'notfound' || uiState === 'nfound' || uiState === 'wrongacct') return;
                     uiState = 'notfound';
-                    showError('No payment found for this email address. Check the spelling or ask the developer.');
+                    hideNotice();
                     statusText.innerText = 'Waiting for payment confirmation…';
                     return;
                 }
-                if (paying || uiState === 'unpaid') return;
+                if (paying || uiState === 'unpaid' || uiState === 'nfound' || uiState === 'wrongacct') return;
                 uiState = 'unpaid';
                 hideNotice();
                 statusText.innerText = 'Waiting for payment confirmation…';
+            }
+
+            // Outcomes PayContract redirects back with (?grant/?npaid/?nfound/?wrongacct)
+            function handleRedirectParams() {
+                const p = new URLSearchParams(location.search);
+                const g = p.get('grant');
+                const npaid = p.get('npaid');
+                const nfound = p.get('nfound');
+                const wrongacct = p.get('wrongacct');
+                if (g || npaid || nfound || wrongacct) {
+                    history.replaceState(null, '', location.pathname);
+                }
+                if (g) { grant = g; rememberGrant(g); uiState = ''; }
+                if (npaid) {
+                    ref = npaid; rememberRef(ref);
+                    paying = true; uiState = '';
+                    errBox.classList.remove('hidden');
+                    errBox.classList.add('text-amber-700', 'bg-amber-50', 'border-amber-100');
+                    errBox.innerHTML = 'Your payment is not complete yet. <a class="font-bold underline" target="_blank" rel="noopener" href="' +
+                        payUrl(npaid) + '">Open your payment page</a> — it unlocks automatically once paid.';
+                    statusText.innerText = 'Waiting for payment confirmation…';
+                }
+                if (nfound) {
+                    uiState = 'nfound';
+                    showError('No payment found for your PayContract account. Sign in with the Google account you used to pay, or contact the developer.');
+                    statusText.innerText = 'Waiting for payment confirmation…';
+                }
+                if (wrongacct) {
+                    uiState = 'wrongacct';
+                    showError('You signed in with a different Google account than "' + wrongacct +
+                        '". Sign out of PayContract and try again with that account.');
+                    statusText.innerText = 'Waiting for payment confirmation…';
+                }
             }
 
             async function check() {
@@ -900,7 +944,17 @@
             async function guard() {
                 try {
                     const d = await ask();
-                    if (d && d.unlocked !== true) relock();
+                    if (!d || d.unlocked === true) return;
+                    if (d.status === 'GRANT_INVALID') {
+                        relock('Your sign-in session has expired. Sign in again to verify your access.', true);
+                        return;
+                    }
+                    if (d.status === 'EXPIRED') {
+                        relock('Access ended on ' + fmtDate(d.expiresAt) + '. Complete the renewal payment to reopen it.', true);
+                        return;
+                    }
+                    if (d.status === 'ERROR') return; // network blip — keep it open
+                    relock();
                 } catch (e) { /* keep open on network blips */ }
             }
 
@@ -910,81 +964,33 @@
                 pollTimer = setInterval(check, POLL_MS);
             }
 
-            // Email -> find the registered payment, unlock or open its payment page
-            contBtn.addEventListener('click', async () => {
+            // Email -> go to PayContract, sign in, verify the payment, come back
+            contBtn.addEventListener('click', () => {
                 hideNotice();
                 const em = emailInput.value.trim().toLowerCase();
                 if (!EMAIL_RE.test(em)) {
                     showError('Enter a valid email address.');
                     return;
                 }
-                email = em;
                 emailInput.value = em;
-                ref = '';
                 contBtn.disabled = true;
-                statusText.innerText = 'Checking your payment…';
-                try {
-                    const d = await ask();
-                    if (!d || d.status === 'ERROR') {
-                        showError('Cannot reach the payment service. Please try again.');
-                        statusText.innerText = 'Waiting for payment confirmation…';
-                        return;
-                    }
-                    if (d.unlocked === true) {
-                        if (d.ref) { ref = d.ref; rememberRef(ref); }
-                        rememberEmail(email);
-                        unlock();
-                        return;
-                    }
-                    if (d.status === 'NOT_FOUND') {
-                        showError('No payment found for this email address. Check the spelling or ask the developer.');
-                        uiState = 'notfound';
-                        statusText.innerText = 'Waiting for payment confirmation…';
-                        return;
-                    }
-                    if (d.ref) { ref = d.ref; rememberRef(ref); }
-                    rememberEmail(email);
-                    if (d.status === 'ADMIN_LOCKED') {
-                        renderLockedState(d);
-                        return;
-                    }
-                    if (!ref) {
-                        showError('No payment found for this email address. Check the spelling or ask the developer.');
-                        uiState = 'notfound';
-                        return;
-                    }
-                    window.open(payUrl(ref), '_blank', 'noopener');
-                    paying = true;
-                    uiState = '';
-                    if (d.status === 'EXPIRED') {
-                        showNotice('Access ended on ' + fmtDate(d.expiresAt) +
-                            ' — complete the renewal payment to reopen it.', 'amber');
-                    } else {
-                        hideNotice();
-                    }
-                    statusText.innerText = 'Payment page opened — this unlocks automatically…';
-                    startPolling();
-                } catch (e) {
-                    showError('Cannot reach the payment service. Please try again.');
-                    statusText.innerText = 'Waiting for payment confirmation…';
-                } finally {
-                    contBtn.disabled = false;
-                }
+                statusText.innerText = 'Redirecting to PayContract…';
+                window.location.href = GRANT_URL + '?hint=' + encodeURIComponent(em);
             });
 
             emailInput.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter') { e.preventDefault(); contBtn.click(); }
             });
 
-            // ?access=1 opens it instantly (for testing or a paid redirect)
-            if (new URLSearchParams(location.search).get('access') === '1') remember();
+            // Outcomes PayContract redirects back with (?grant/?npaid/?nfound/?wrongacct)
+            handleRedirectParams();
 
-            if (isOpen() || location.search.indexOf('access=1') > -1) {
+            if (isOpen()) {
                 unlock();
             } else {
                 document.body.style.overflow = 'hidden';
                 statusText.innerText = 'Waiting for payment confirmation…';
-                startPolling();
+                startPolling();   // first check verifies ?grant= immediately
             }
         })();
     </script>
