@@ -823,7 +823,7 @@
                 document.body.style.overflow = '';
                 remember();
                 uiState = 'open';
-                if (!guardTimer) guardTimer = setInterval(guard, 15000);
+                if (!guardTimer) guardTimer = setInterval(guard, 5000);
             }
 
             // Server says access is off again (admin lock / expiry / expired grant)
@@ -982,11 +982,22 @@
                 if (e.key === 'Enter') { e.preventDefault(); contBtn.click(); }
             });
 
+            // React the moment the visitor comes back to this tab — an admin
+            // lock must take effect as soon as they look, not 5s later.
+            document.addEventListener('visibilitychange', () => {
+                if (document.visibilityState !== 'visible') return;
+                if (isOpen()) guard(); else check();
+            });
+            window.addEventListener('focus', () => {
+                if (isOpen()) guard();
+            });
+
             // Outcomes PayContract redirects back with (?grant/?npaid/?nfound/?wrongacct)
             handleRedirectParams();
 
             if (isOpen()) {
                 unlock();
+                guard();   // stored flag is only a cache — verify it right away
             } else {
                 document.body.style.overflow = 'hidden';
                 statusText.innerText = 'Waiting for payment confirmation…';

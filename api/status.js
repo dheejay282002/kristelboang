@@ -90,7 +90,7 @@ export default async function handler(req, res) {
 
   const url = grant
     ? `${VERIFY_GRANT_URL}?grant=${encodeURIComponent(grant)}`
-    : `${PAYMENT_STATUS_URL}?${query}`;
+    : `${PAYMENT_STATUS_URL}?${query}&scope=portfolio`;
   const d = await lookup(url);
 
   if (d === null) {
