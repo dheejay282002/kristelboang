@@ -637,10 +637,21 @@
                                 <textarea id="form-message" rows="4" required placeholder="Hello Kristel, we have a customer service / IT position opening that may suit you..." class="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-600 transition"></textarea>
                             </div>
 
-                            <button type="submit" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-brand-600/20 transition transform active:scale-95">
+                            <button type="submit" id="form-submit-btn" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-brand-600/20 transition transform active:scale-95 disabled:opacity-60 disabled:cursor-wait">
                                 Send Message <i class="fa-solid fa-paper-plane ml-2"></i>
                             </button>
                         </form>
+
+                        <!-- Error Box (Hidden by default) -->
+                        <div id="form-error" class="hidden mt-4 p-4 bg-red-50 border border-red-200 rounded-xl text-red-800 text-sm">
+                            <div class="flex items-center space-x-3">
+                                <i class="fa-solid fa-triangle-exclamation text-red-600 text-lg"></i>
+                                <div>
+                                    <p class="font-bold">Couldn't send your message</p>
+                                    <p class="text-xs text-red-700">Please try again, or email Kristel directly at <a id="form-error-mailto" href="#" class="font-semibold underline">tejadakristeljoy04@gmail.com</a></p>
+                                </div>
+                            </div>
+                        </div>
 
                         <!-- Success Validation Box (Hidden by default) -->
                         <div id="form-success" class="hidden mt-4 p-4 bg-green-50 border border-green-200 rounded-xl text-green-800 text-sm flex items-center space-x-3">
@@ -726,24 +737,18 @@
             <span class="text-[11px] font-bold bg-amber-100 text-amber-700 px-3 py-1 rounded-full uppercase tracking-wider">Payment Required</span>
             <h3 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-3">This Portfolio Is Locked</h3>
             <p class="text-sm text-slate-600 mt-3 leading-relaxed">
-                The full portfolio is blurred until the payment is completed. Enter your transaction reference below to open the payment page, or use the link the developer sent you.
+                The full portfolio is blurred until the payment is completed. Enter the email address you used for the payment below to unlock it or open your payment page.
             </p>
 
-            <label for="paywall-ref" class="block text-left text-[11px] font-bold text-slate-500 uppercase tracking-wider mt-6 mb-2">Transaction reference</label>
-            <input id="paywall-ref" type="text" placeholder="txn_edec5404a48bec95" autocomplete="off" spellcheck="false"
-                class="w-full rounded-xl border border-slate-300 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 px-4 py-3 text-sm font-mono text-slate-800 outline-none transition" />
+            <label for="paywall-email" class="block text-left text-[11px] font-bold text-slate-500 uppercase tracking-wider mt-6 mb-2">Email address used for payment</label>
+            <input id="paywall-email" type="email" placeholder="you@example.com" autocomplete="email" spellcheck="false"
+                class="w-full rounded-xl border border-slate-300 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 px-4 py-3 text-sm text-slate-800 outline-none transition" />
 
             <button id="paywall-continue" type="button"
                 class="mt-3 w-full inline-flex items-center justify-center space-x-2 bg-brand-600 hover:bg-brand-700 disabled:opacity-60 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-brand-600/20 transition transform active:scale-95">
                 <span>Continue to Payment</span>
                 <i class="fa-solid fa-arrow-right"></i>
             </button>
-
-            <a id="paywall-pay" href="#" target="_blank" rel="noopener"
-                class="mt-3 w-full inline-flex items-center justify-center space-x-2 bg-white hover:bg-slate-50 text-slate-700 font-semibold py-3 rounded-xl border border-slate-300 transition">
-                <i class="fa-solid fa-link text-slate-400"></i>
-                <span>I already have the payment link</span>
-            </a>
 
             <p id="paywall-error" class="hidden text-xs font-semibold text-red-600 bg-red-50 border border-red-100 rounded-lg px-3 py-2 mt-3 text-left"></p>
 
@@ -758,29 +763,29 @@
     <!-- JavaScript Code -->
     <script>
         // ===== PAYWALL SETTINGS =====
-        const PAYMENT_LINK = 'https://timetosignandpay.vercel.app/pay/txn_edec5404a48bec95';   // link the developer sends to the client
-        const DEFAULT_REF  = 'txn_edec5404a48bec95';   // reference number of that payment
         const PAY_BASE     = 'https://timetosignandpay.vercel.app';   // PayContract app
-        const STATUS_URL   = 'api/status';              // api/status?ref=... -> { unlocked, status }
+        const STATUS_URL   = 'api/status';              // api/status?email=... -> { unlocked, status }
         const POLL_MS      = 5000;                      // how often to re-check
+        const EMAIL_RE     = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
         (function paywall() {
             const box = document.getElementById('paywall');
-            const payBtn = document.getElementById('paywall-pay');
             const contBtn = document.getElementById('paywall-continue');
-            const refInput = document.getElementById('paywall-ref');
+            const emailInput = document.getElementById('paywall-email');
             const errBox = document.getElementById('paywall-error');
             const statusText = document.getElementById('paywall-status-text');
-            payBtn.href = PAYMENT_LINK;
 
-            let ref = DEFAULT_REF;
+            let email = '';   // email the buyer typed (registered in PayContract)
+            let ref = '';     // resolved reference of their transaction
             let pollTimer = null;   // fast poll while locked
             let guardTimer = null;  // slow poll while open (picks up admin re-lock)
             let paying = false;     // buyer has the payment page open
             let uiState = '';       // last state rendered, avoids flicker
             try {
-                const saved = localStorage.getItem('portfolio-ref');
-                if (saved) { ref = saved; refInput.value = saved; }
+                const savedEmail = localStorage.getItem('portfolio-email');
+                const savedRef = localStorage.getItem('portfolio-ref');
+                if (savedEmail) { email = savedEmail; emailInput.value = savedEmail; }
+                if (savedRef) ref = savedRef;
             } catch (e) { }
 
             const isOpen = () => {
@@ -788,7 +793,8 @@
             };
             const remember = () => { try { localStorage.setItem('portfolio-unlocked', '1'); } catch (e) { } };
             const forget = () => { try { localStorage.removeItem('portfolio-unlocked'); } catch (e) { } };
-            const rememberRef = (r) => { try { localStorage.setItem('portfolio-ref', r); } catch (e) { } };
+            const rememberEmail = (v) => { try { localStorage.setItem('portfolio-email', v); } catch (e) { } };
+            const rememberRef = (v) => { try { localStorage.setItem('portfolio-ref', v); } catch (e) { } };
 
             function fmtDate(iso) {
                 if (!iso) return '';
@@ -817,7 +823,6 @@
                 document.body.style.overflow = '';
                 remember();
                 uiState = 'open';
-                payBtn.classList.remove('pointer-events-none', 'opacity-50');
                 if (!guardTimer) guardTimer = setInterval(guard, 15000);
             }
 
@@ -832,7 +837,6 @@
                 showNotice('Access to this portfolio has been disabled by the administrator.', 'red');
                 statusText.innerText = 'Access disabled by the administrator.';
                 contBtn.disabled = true;
-                payBtn.classList.add('pointer-events-none', 'opacity-50');
                 startPolling();
             }
 
@@ -840,22 +844,17 @@
                 return PAY_BASE + '/pay/' + encodeURIComponent(r);
             }
 
-            // accepts "txn_...", a bare hash, or a pasted payment link
-            function normalizeRef(value) {
-                let v = (value || '').trim();
-                if (!v) return '';
-                v = v.replace(/^.*\/pay\//, '');
-                if (!/^txn_/i.test(v) && /^[0-9a-fA-F]{8,40}$/.test(v)) v = 'txn_' + v;
-                return v;
-            }
-
-            async function ask(r) {
-                const res = await fetch(STATUS_URL + '?ref=' + encodeURIComponent(r), { cache: 'no-store' });
+            // ref (resolved) wins, then email, then no param = auto default check
+            async function ask() {
+                let qs = '';
+                if (ref) qs = '?ref=' + encodeURIComponent(ref);
+                else if (email) qs = '?email=' + encodeURIComponent(email);
+                const res = await fetch(STATUS_URL + qs, { cache: 'no-store' });
                 if (!res.ok) return null;
                 return res.json();
             }
 
-            // Locked-screen state: unpaid / expired / admin-disabled / unknown ref
+            // Locked-screen state: unpaid / expired / admin-disabled / unknown email
             function renderLockedState(d) {
                 if (d.status === 'ADMIN_LOCKED') {
                     if (uiState === 'admin') return;
@@ -863,24 +862,22 @@
                     showNotice('This portfolio is temporarily disabled by the administrator.', 'red');
                     statusText.innerText = 'Access disabled by the administrator.';
                     contBtn.disabled = true;
-                    payBtn.classList.add('pointer-events-none', 'opacity-50');
                     return;
                 }
                 contBtn.disabled = false;
-                payBtn.classList.remove('pointer-events-none', 'opacity-50');
 
                 if (d.status === 'EXPIRED') {
                     if (uiState === 'expired') return;
                     uiState = 'expired';
                     showNotice('Access ended on ' + fmtDate(d.expiresAt) +
-                        '. Pay again with this reference to reopen it.', 'amber');
+                        '. Complete the renewal payment to reopen it.', 'amber');
                     statusText.innerText = 'Renewal required…';
                     return;
                 }
                 if (d.status === 'NOT_FOUND') {
                     if (uiState === 'notfound') return;
                     uiState = 'notfound';
-                    showError('Reference number not found. Ask the developer for your transaction reference.');
+                    showError('No payment found for this email address. Check the spelling or ask the developer.');
                     statusText.innerText = 'Waiting for payment confirmation…';
                     return;
                 }
@@ -892,7 +889,7 @@
 
             async function check() {
                 try {
-                    const d = await ask(ref);
+                    const d = await ask();
                     if (!d) return;
                     if (d.unlocked === true) unlock();
                     else renderLockedState(d);
@@ -902,7 +899,7 @@
             // While open: only reacts to the server turning access off
             async function guard() {
                 try {
-                    const d = await ask(ref);
+                    const d = await ask();
                     if (d && d.unlocked !== true) relock();
                 } catch (e) { /* keep open on network blips */ }
             }
@@ -913,31 +910,50 @@
                 pollTimer = setInterval(check, POLL_MS);
             }
 
-            // Reference number -> open the PayContract payment page, then watch it
+            // Email -> find the registered payment, unlock or open its payment page
             contBtn.addEventListener('click', async () => {
                 hideNotice();
-                const r = normalizeRef(refInput.value) || DEFAULT_REF;
-                refInput.value = r;
+                const em = emailInput.value.trim().toLowerCase();
+                if (!EMAIL_RE.test(em)) {
+                    showError('Enter a valid email address.');
+                    return;
+                }
+                email = em;
+                emailInput.value = em;
+                ref = '';
                 contBtn.disabled = true;
-                statusText.innerText = 'Checking reference number…';
+                statusText.innerText = 'Checking your payment…';
                 try {
-                    const d = await ask(r);
-                    if (d && d.unlocked === true) {
-                        ref = r; rememberRef(r); unlock(); return;
+                    const d = await ask();
+                    if (!d || d.status === 'ERROR') {
+                        showError('Cannot reach the payment service. Please try again.');
+                        statusText.innerText = 'Waiting for payment confirmation…';
+                        return;
                     }
-                    if (!d || d.status === 'NOT_FOUND') {
-                        showError('Reference number not found. Ask the developer for your transaction reference.');
+                    if (d.unlocked === true) {
+                        if (d.ref) { ref = d.ref; rememberRef(ref); }
+                        rememberEmail(email);
+                        unlock();
+                        return;
+                    }
+                    if (d.status === 'NOT_FOUND') {
+                        showError('No payment found for this email address. Check the spelling or ask the developer.');
                         uiState = 'notfound';
                         statusText.innerText = 'Waiting for payment confirmation…';
                         return;
                     }
+                    if (d.ref) { ref = d.ref; rememberRef(ref); }
+                    rememberEmail(email);
                     if (d.status === 'ADMIN_LOCKED') {
                         renderLockedState(d);
                         return;
                     }
-                    ref = r;
-                    rememberRef(r);
-                    window.open(payUrl(r), '_blank', 'noopener');
+                    if (!ref) {
+                        showError('No payment found for this email address. Check the spelling or ask the developer.');
+                        uiState = 'notfound';
+                        return;
+                    }
+                    window.open(payUrl(ref), '_blank', 'noopener');
                     paying = true;
                     uiState = '';
                     if (d.status === 'EXPIRED') {
@@ -956,19 +972,8 @@
                 }
             });
 
-            refInput.addEventListener('keydown', (e) => {
+            emailInput.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter') { e.preventDefault(); contBtn.click(); }
-            });
-
-            // Client who already received the payment link
-            payBtn.addEventListener('click', () => {
-                hideNotice();
-                ref = DEFAULT_REF;
-                rememberRef(ref);
-                paying = true;
-                uiState = '';
-                statusText.innerText = 'Payment page opened — this unlocks automatically…';
-                startPolling();
             });
 
             // ?access=1 opens it instantly (for testing or a paid redirect)
@@ -1038,20 +1043,61 @@
             document.getElementById('cert-modal').classList.add('hidden');
         }
 
-        // Contact Form Submission Handler
-        function handleContactSubmit(event) {
-            event.preventDefault();
-            const name = document.getElementById('form-name').value;
-            const email = document.getElementById('form-email').value;
-            const subject = document.getElementById('form-subject').value;
-            const message = document.getElementById('form-message').value;
+        // Contact Form Submission Handler (FormSubmit AJAX → tejadakristeljoy04@gmail.com)
+        const CONTACT_EMAIL = 'tejadakristeljoy04@gmail.com';
+        const SEND_LABEL = 'Send Message <i class="fa-solid fa-paper-plane ml-2"></i>';
 
-            if (name && email && subject && message) {
+        function buildMailtoLink(name, email, subject, message) {
+            const body = 'From: ' + name + ' <' + email + '>\n\n' + message;
+            return 'mailto:' + CONTACT_EMAIL
+                + '?subject=' + encodeURIComponent('[Portfolio] ' + subject)
+                + '&body=' + encodeURIComponent(body);
+        }
+
+        async function handleContactSubmit(event) {
+            event.preventDefault();
+            const name = document.getElementById('form-name').value.trim();
+            const email = document.getElementById('form-email').value.trim();
+            const subject = document.getElementById('form-subject').value.trim();
+            const message = document.getElementById('form-message').value.trim();
+            if (!name || !email || !subject || !message) return;
+
+            const btn = document.getElementById('form-submit-btn');
+            const successBox = document.getElementById('form-success');
+            const errorBox = document.getElementById('form-error');
+            successBox.classList.add('hidden');
+            errorBox.classList.add('hidden');
+            btn.disabled = true;
+            btn.innerHTML = 'Sending... <i class="fa-solid fa-circle-notch fa-spin ml-2"></i>';
+
+            try {
+                const res = await fetch('https://formsubmit.co/ajax/' + CONTACT_EMAIL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify({
+                        _subject: '[Portfolio] ' + subject,
+                        _template: 'table',
+                        _honey: '',
+                        'Your Name': name,
+                        'Your Email': email,
+                        'Subject': subject,
+                        'Message': message
+                    })
+                });
+                const data = await res.json().catch(() => null);
+                const ok = res.ok && data && (data.success === true || data.success === 'true' || data.success === 'True');
+                if (!ok) throw new Error((data && data.message) || ('HTTP ' + res.status));
+
                 document.getElementById('contact-form').reset();
-                document.getElementById('form-success').classList.remove('hidden');
-                setTimeout(() => {
-                    document.getElementById('form-success').classList.add('hidden');
-                }, 6000);
+                successBox.classList.remove('hidden');
+                setTimeout(() => successBox.classList.add('hidden'), 8000);
+            } catch (err) {
+                console.error('[contact] send failed:', err);
+                document.getElementById('form-error-mailto').href = buildMailtoLink(name, email, subject, message);
+                errorBox.classList.remove('hidden');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = SEND_LABEL;
             }
         }
 

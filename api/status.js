@@ -1,11 +1,13 @@
 // Vercel Serverless Function — polled by index.html every 5 seconds.
-//   GET /api/status              -> checks the portfolio's own reference number
+//   GET /api/status              -> auto-check (defaults to the portfolio's own reference)
 //   GET /api/status?ref=txn_...  -> checks any PayContract reference number
+//   GET /api/status?email=a@b.c  -> checks every payment registered to that email
 // Returns { unlocked, status, ref, payUrl }. The page unlocks for EVERYONE
-// as soon as the payment behind that reference number is PAID.
+// as soon as the payment behind the default reference is PAID, or for one
+// visitor when the email they type matches a paid transaction.
 //
 // The lookup goes to PayContract's public endpoint:
-//   https://timetosignandpay.vercel.app/api/public/status?ref=...
+//   https://timetosignandpay.vercel.app/api/public/status
 //
 // MANUAL OVERRIDES (used if the lookup below fails):
 //   Option A (no code): Vercel dashboard -> Settings -> Environment Variables
@@ -16,15 +18,15 @@ const DEFAULT_REF = 'txn_edec5404a48bec95';
 const PAY_BASE    = process.env.PAY_BASE || 'https://timetosignandpay.vercel.app';
 const PAYMENT_STATUS_URL = process.env.PAY_STATUS_URL
   || 'https://timetosignandpay.vercel.app/api/public/status';
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-function pickRef(req) {
-  const q = req.query && req.query.ref;
+function pickParam(req, key) {
+  const q = req.query && req.query[key];
   const raw = Array.isArray(q) ? q[0] : q;
   if (raw) return String(raw);
   try {
     const u = new URL(req.url, 'http://localhost');
-    const p = u.searchParams.get('ref');
-    if (p) return p;
+    return u.searchParams.get(key) || '';
   } catch (e) { /* ignore */ }
   return '';
 }
@@ -37,8 +39,8 @@ function normalizeRef(value) {
   return v;
 }
 
-async function lookup(ref) {
-  const url = `${PAYMENT_STATUS_URL}?ref=${encodeURIComponent(ref)}`;
+async function lookup(query) {
+  const url = `${PAYMENT_STATUS_URL}?${query}`;
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 6000);
   try {
@@ -54,6 +56,7 @@ async function lookup(ref) {
       expiresAt: typeof d.expiresAt === 'string' ? d.expiresAt : null,
       access: typeof d.access === 'string' ? d.access : 'auto',
       portfolio: d.portfolio === true,
+      ref: typeof d.ref === 'string' ? d.ref : null,
     };
   } catch (e) {
     return null;
@@ -66,26 +69,38 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Cache-Control', 'no-store');
 
-  const ref = normalizeRef(pickRef(req));
-  const payUrl = `${PAY_BASE}/pay/${encodeURIComponent(ref)}`;
+  const emailRaw = pickParam(req, 'email').trim();
+  const email = EMAIL_RE.test(emailRaw) ? emailRaw : '';
+  const ref = normalizeRef(pickParam(req, 'ref'));
+  const query = email
+    ? 'email=' + encodeURIComponent(email)
+    : 'ref=' + encodeURIComponent(ref);
 
   const envUnlock = process.env.PORTFOLIO_UNLOCKED === 'true';
   const constUnlock = false; // <-- change to true to force-unlock, then push
   if (envUnlock || constUnlock) {
     return res.status(200).json({
       unlocked: true, status: 'PAID', paid: true, expired: false,
-      expiresAt: null, access: 'unlocked', ref, payUrl,
+      expiresAt: null, access: 'unlocked', ref,
+      payUrl: `${PAY_BASE}/pay/${encodeURIComponent(ref)}`,
     });
   }
 
-  const d = await lookup(ref);
+  const d = await lookup(query);
   if (d === null) {
     // payment service unreachable -> stay locked (safe default)
     return res.status(200).json({
       unlocked: false, status: 'ERROR', paid: false, expired: false,
-      expiresAt: null, access: 'auto', ref, payUrl,
+      expiresAt: null, access: 'auto', ref,
+      payUrl: `${PAY_BASE}/pay/${encodeURIComponent(ref)}`,
     });
   }
 
-  res.status(200).json({ ...d, ref, payUrl });
+  const finalRef = d.ref || ref;
+  const { ref: _ignored, ...rest } = d;
+  res.status(200).json({
+    ...rest,
+    ref: finalRef,
+    payUrl: `${PAY_BASE}/pay/${encodeURIComponent(finalRef)}`,
+  });
 }
