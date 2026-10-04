@@ -17,6 +17,7 @@
 //   Option B (git):     set the fallback constant below to true and push.
 
 const DEFAULT_REF = 'txn_edec5404a48bec95';
+const SITE        = 'kristelboang';                 // this site's slug (per-site admin lock)
 const PAY_BASE    = process.env.PAY_BASE || 'https://timetosignandpay.vercel.app';
 const PAYMENT_STATUS_URL = process.env.PAY_STATUS_URL
   || 'https://timetosignandpay.vercel.app/api/public/status';
@@ -89,8 +90,8 @@ export default async function handler(req, res) {
   }
 
   const url = grant
-    ? `${VERIFY_GRANT_URL}?grant=${encodeURIComponent(grant)}`
-    : `${PAYMENT_STATUS_URL}?${query}&scope=portfolio`;
+    ? `${VERIFY_GRANT_URL}?grant=${encodeURIComponent(grant)}&site=${encodeURIComponent(SITE)}`
+    : `${PAYMENT_STATUS_URL}?${query}&scope=portfolio&site=${encodeURIComponent(SITE)}`;
   const d = await lookup(url);
 
   if (d === null) {
