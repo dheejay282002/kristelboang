@@ -750,6 +750,12 @@
                 <i class="fa-solid fa-arrow-right"></i>
             </button>
 
+            <button id="paywall-subscribe" type="button"
+                class="mt-3 w-full inline-flex items-center justify-center space-x-2 border border-slate-300 hover:border-brand-500 hover:text-brand-700 text-slate-700 font-bold py-3.5 rounded-xl transition">
+                <i class="fa-solid fa-bolt"></i>
+                <span>Subscribe for early access</span>
+            </button>
+
             <p id="paywall-error" class="hidden text-xs font-semibold text-red-600 bg-red-50 border border-red-100 rounded-lg px-3 py-2 mt-3 text-left"></p>
 
             <p id="paywall-status" class="text-xs text-slate-500 mt-5 inline-flex items-center justify-center space-x-2">
@@ -772,6 +778,7 @@
         (function paywall() {
             const box = document.getElementById('paywall');
             const contBtn = document.getElementById('paywall-continue');
+            const subBtn = document.getElementById('paywall-subscribe');
             const emailInput = document.getElementById('paywall-email');
             const errBox = document.getElementById('paywall-error');
             const statusText = document.getElementById('paywall-status-text');
@@ -920,7 +927,7 @@
                 }
                 if (nfound) {
                     uiState = 'nfound';
-                    showError('No payment found for your PayContract account. Sign in with the Google account you used to pay, or contact the developer.');
+                    showError('No payment found for your account yet. <a class="font-bold underline" href="' + PAY_BASE + '/subscribe">Subscribe for early access</a> — pick a plan and pay, or sign in with the Google account you used before.');
                     statusText.innerText = 'Waiting for payment confirmation…';
                 }
                 if (wrongacct) {
@@ -980,6 +987,15 @@
 
             emailInput.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter') { e.preventDefault(); contBtn.click(); }
+            });
+
+            // Subscribe for early access — PayContract requires a login first,
+            // then lands on the subscription plan picker.
+            subBtn.addEventListener('click', () => {
+                hideNotice();
+                subBtn.disabled = true;
+                statusText.innerText = 'Opening subscription page…';
+                window.location.href = PAY_BASE + '/subscribe';
             });
 
             // React the moment the visitor comes back to this tab — an admin
