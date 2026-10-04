@@ -47,8 +47,13 @@ async function lookup(ref) {
     const d = await r.json();
     if (typeof d !== 'object' || d === null) return null;
     return {
-      unlocked: d.unlocked === true || d.paid === true || d.status === 'PAID' || d.status === 'SIGNED',
-      status: typeof d.status === 'string' ? d.status : (d.unlocked ? 'PAID' : 'UNKNOWN'),
+      unlocked: d.unlocked === true,
+      status: typeof d.status === 'string' ? d.status : 'UNKNOWN',
+      paid: d.paid === true,
+      expired: d.expired === true,
+      expiresAt: typeof d.expiresAt === 'string' ? d.expiresAt : null,
+      access: typeof d.access === 'string' ? d.access : 'auto',
+      portfolio: d.portfolio === true,
     };
   } catch (e) {
     return null;
@@ -67,14 +72,20 @@ export default async function handler(req, res) {
   const envUnlock = process.env.PORTFOLIO_UNLOCKED === 'true';
   const constUnlock = false; // <-- change to true to force-unlock, then push
   if (envUnlock || constUnlock) {
-    return res.status(200).json({ unlocked: true, status: 'PAID', ref, payUrl });
+    return res.status(200).json({
+      unlocked: true, status: 'PAID', paid: true, expired: false,
+      expiresAt: null, access: 'unlocked', ref, payUrl,
+    });
   }
 
   const d = await lookup(ref);
   if (d === null) {
     // payment service unreachable -> stay locked (safe default)
-    return res.status(200).json({ unlocked: false, status: 'ERROR', ref, payUrl });
+    return res.status(200).json({
+      unlocked: false, status: 'ERROR', paid: false, expired: false,
+      expiresAt: null, access: 'auto', ref, payUrl,
+    });
   }
 
-  res.status(200).json({ unlocked: d.unlocked, status: d.status, ref, payUrl });
+  res.status(200).json({ ...d, ref, payUrl });
 }

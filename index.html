@@ -774,7 +774,10 @@
             payBtn.href = PAYMENT_LINK;
 
             let ref = DEFAULT_REF;
-            let pollTimer = null;
+            let pollTimer = null;   // fast poll while locked
+            let guardTimer = null;  // slow poll while open (picks up admin re-lock)
+            let paying = false;     // buyer has the payment page open
+            let uiState = '';       // last state rendered, avoids flicker
             try {
                 const saved = localStorage.getItem('portfolio-ref');
                 if (saved) { ref = saved; refInput.value = saved; }
@@ -784,18 +787,53 @@
                 try { return localStorage.getItem('portfolio-unlocked') === '1'; } catch (e) { return false; }
             };
             const remember = () => { try { localStorage.setItem('portfolio-unlocked', '1'); } catch (e) { } };
+            const forget = () => { try { localStorage.removeItem('portfolio-unlocked'); } catch (e) { } };
             const rememberRef = (r) => { try { localStorage.setItem('portfolio-ref', r); } catch (e) { } };
 
+            function fmtDate(iso) {
+                if (!iso) return '';
+                try {
+                    return new Date(iso).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+                } catch (e) { return ''; }
+            }
+
+            function showNotice(msg, tone) {
+                errBox.innerText = msg;
+                errBox.classList.remove('hidden',
+                    'text-red-600', 'bg-red-50', 'border-red-100',
+                    'text-amber-700', 'bg-amber-50', 'border-amber-100');
+                if (tone === 'amber') errBox.classList.add('text-amber-700', 'bg-amber-50', 'border-amber-100');
+                else errBox.classList.add('text-red-600', 'bg-red-50', 'border-red-100');
+            }
+            function showError(msg) { showNotice(msg, 'red'); }
+            function hideNotice() { errBox.classList.add('hidden'); }
+
+            function stopFastPoll() { if (pollTimer) { clearInterval(pollTimer); pollTimer = null; } }
+            function stopGuard() { if (guardTimer) { clearInterval(guardTimer); guardTimer = null; } }
+
             function unlock() {
-                if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+                stopFastPoll();
                 box.classList.add('hidden');
                 document.body.style.overflow = '';
                 remember();
+                uiState = 'open';
+                payBtn.classList.remove('pointer-events-none', 'opacity-50');
+                if (!guardTimer) guardTimer = setInterval(guard, 15000);
             }
 
-            function showError(msg) {
-                errBox.innerText = msg;
-                errBox.classList.remove('hidden');
+            // Server says access is off again (admin lock / expiry) — close it
+            function relock() {
+                stopGuard();
+                forget();
+                box.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+                uiState = '';
+                paying = false;
+                showNotice('Access to this portfolio has been disabled by the administrator.', 'red');
+                statusText.innerText = 'Access disabled by the administrator.';
+                contBtn.disabled = true;
+                payBtn.classList.add('pointer-events-none', 'opacity-50');
+                startPolling();
             }
 
             function payUrl(r) {
@@ -817,11 +855,56 @@
                 return res.json();
             }
 
+            // Locked-screen state: unpaid / expired / admin-disabled / unknown ref
+            function renderLockedState(d) {
+                if (d.status === 'ADMIN_LOCKED') {
+                    if (uiState === 'admin') return;
+                    uiState = 'admin';
+                    showNotice('This portfolio is temporarily disabled by the administrator.', 'red');
+                    statusText.innerText = 'Access disabled by the administrator.';
+                    contBtn.disabled = true;
+                    payBtn.classList.add('pointer-events-none', 'opacity-50');
+                    return;
+                }
+                contBtn.disabled = false;
+                payBtn.classList.remove('pointer-events-none', 'opacity-50');
+
+                if (d.status === 'EXPIRED') {
+                    if (uiState === 'expired') return;
+                    uiState = 'expired';
+                    showNotice('Access ended on ' + fmtDate(d.expiresAt) +
+                        '. Pay again with this reference to reopen it.', 'amber');
+                    statusText.innerText = 'Renewal required…';
+                    return;
+                }
+                if (d.status === 'NOT_FOUND') {
+                    if (uiState === 'notfound') return;
+                    uiState = 'notfound';
+                    showError('Reference number not found. Ask the developer for your transaction reference.');
+                    statusText.innerText = 'Waiting for payment confirmation…';
+                    return;
+                }
+                if (paying || uiState === 'unpaid') return;
+                uiState = 'unpaid';
+                hideNotice();
+                statusText.innerText = 'Waiting for payment confirmation…';
+            }
+
             async function check() {
                 try {
                     const d = await ask(ref);
-                    if (d && d.unlocked === true) unlock();
+                    if (!d) return;
+                    if (d.unlocked === true) unlock();
+                    else renderLockedState(d);
                 } catch (e) { /* keep waiting */ }
+            }
+
+            // While open: only reacts to the server turning access off
+            async function guard() {
+                try {
+                    const d = await ask(ref);
+                    if (d && d.unlocked !== true) relock();
+                } catch (e) { /* keep open on network blips */ }
             }
 
             function startPolling() {
@@ -832,7 +915,7 @@
 
             // Reference number -> open the PayContract payment page, then watch it
             contBtn.addEventListener('click', async () => {
-                errBox.classList.add('hidden');
+                hideNotice();
                 const r = normalizeRef(refInput.value) || DEFAULT_REF;
                 refInput.value = r;
                 contBtn.disabled = true;
@@ -844,12 +927,25 @@
                     }
                     if (!d || d.status === 'NOT_FOUND') {
                         showError('Reference number not found. Ask the developer for your transaction reference.');
+                        uiState = 'notfound';
                         statusText.innerText = 'Waiting for payment confirmation…';
+                        return;
+                    }
+                    if (d.status === 'ADMIN_LOCKED') {
+                        renderLockedState(d);
                         return;
                     }
                     ref = r;
                     rememberRef(r);
                     window.open(payUrl(r), '_blank', 'noopener');
+                    paying = true;
+                    uiState = '';
+                    if (d.status === 'EXPIRED') {
+                        showNotice('Access ended on ' + fmtDate(d.expiresAt) +
+                            ' — complete the renewal payment to reopen it.', 'amber');
+                    } else {
+                        hideNotice();
+                    }
                     statusText.innerText = 'Payment page opened — this unlocks automatically…';
                     startPolling();
                 } catch (e) {
@@ -866,9 +962,11 @@
 
             // Client who already received the payment link
             payBtn.addEventListener('click', () => {
-                errBox.classList.add('hidden');
+                hideNotice();
                 ref = DEFAULT_REF;
                 rememberRef(ref);
+                paying = true;
+                uiState = '';
                 statusText.innerText = 'Payment page opened — this unlocks automatically…';
                 startPolling();
             });
