@@ -696,6 +696,7 @@
     <script>
         // ===== PAYWALL SETTINGS =====
         const PAY_BASE    = 'https://timetosignandpay.vercel.app';   // PayContract app
+        const PAYWALL_ENABLED = false;
         const GRANT_URL   = PAY_BASE + '/api/portfolio/grant';  // sign in + payment check
         const STATUS_URL  = 'api/status';              // api/status?grant=|?ref= -> { unlocked, status }
         const POLL_MS     = 5000;                      // how often to re-check
@@ -703,6 +704,10 @@
 
         (function paywall() {
             const box = document.getElementById('paywall');
+            if (!PAYWALL_ENABLED) {
+                box.classList.add('hidden');
+                return;
+            }
             const contBtn = document.getElementById('paywall-continue');
             const subBtn = document.getElementById('paywall-subscribe');
             const emailInput = document.getElementById('paywall-email');
